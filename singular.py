@@ -11,11 +11,10 @@ import os
 import sys
 
 CONFIG = "settings.json"
-PICKLE = "season.pickle"
 LOG = "singular.log"
 DOWNLOAD = "data"
 
-cmd = "..\\aria2\\aria2c.exe --seed-time=0 "
+cmd = "..\\..\\aria2\\aria2c.exe --seed-time=0 "
 
 
 def log(item):
@@ -32,17 +31,6 @@ def read_json():
 	return json.load(open(CONFIG))
 
 
-def read_pickle(pickle_file):
-	'''
-	Reads in the pickle file to determine current episodes, etc
-	'''
-	log("Reading pickle")
-	
-def write_pickle(pickle_file):
-	'''
-	Writes back out to the pickle file for next run
-	'''
-	log("Writing pickle")
 
 
 
@@ -67,15 +55,27 @@ def is_match(title, matches):
 	log("Match not found")
 	return False
 
-def download_torrent(url, match):
+def download_torrent(url, match_name, title):
 	'''
 	Downloads the given torrent
 	'''
+	
+	
 	log("Downloading torrent")
 	log(cmd)
-	full_cmd = "cd " + DOWNLOAD + " && mkdir " + match + " && cd " + match + " && "	
-	full_cmd += cmd + '"' + url + '"'  + " > ..\\..\\download_output " + 
-	full_cmd += " && cd .. && cd .."
+	
+	match = match_name.replace(" ", "_")
+	
+	if match not in os.listdir(DOWNLOAD):
+		os.system("mkdir " + DOWNLOAD + "\\" + match)
+	
+	if title in os.listdir(DOWNLOAD + "\\" + match):
+		log(title + " already found.  Ending")
+		return 1
+	
+	full_cmd = "cd " + DOWNLOAD + "\\" + match + " && "	
+	full_cmd += cmd + '"' + url + '"'  + " > ..\\..\\download_output " 
+	print(os.listdir())
 	log("Full command: " + full_cmd)
 	os.system(full_cmd)
 	with open("download_output") as f:
@@ -95,7 +95,8 @@ def main():
 		match = is_match(item.title, config['shows'])
 		if(match):
 			try:
-				download_torrent(item.links[0].href, match)
+				download_torrent(item.links[0].href, match, item.title)
+				
 			except Exception:
 				log("Download error: " + str(sys.exc_info()[1]))
 	
