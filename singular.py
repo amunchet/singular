@@ -9,12 +9,15 @@ import feedparser
 import json
 import os
 import sys
+import time
+from icrawler.builtin import GoogleImageCrawler, BingImageCrawler
 
 CONFIG = "settings.json"
 LOG = "singular.log"
 DOWNLOAD = "data"
+DELIM = "\\" # Windows specific
 
-cmd = "..\\..\\aria2\\aria2c.exe --seed-time=0 "
+cmd = '''..{}..{}aria2{}aria2c.exe --seed-time=0 '''.format(DELIM, DELIM, DELIM)
 
 
 def log(item):
@@ -60,21 +63,20 @@ def download_torrent(url, match_name, title):
 	Downloads the given torrent
 	'''
 	
-	
 	log("Downloading torrent")
 	log(cmd)
 	
 	match = match_name.replace(" ", "_")
 	
 	if match not in os.listdir(DOWNLOAD):
-		os.system("mkdir " + DOWNLOAD + "\\" + match)
+		os.system("mkdir " + DOWNLOAD + DELIM + match)
 	
-	if title in os.listdir(DOWNLOAD + "\\" + match):
+	if title in os.listdir(DOWNLOAD + DELIM + match):
 		log(title + " already found.  Ending")
 		return 1
 	
-	full_cmd = "cd " + DOWNLOAD + "\\" + match + " && "	
-	full_cmd += cmd + '"' + url + '"'  + " > ..\\..\\download_output " 
+	full_cmd = "cd " + DOWNLOAD + DELIM + match + " && "	
+	full_cmd += cmd + '"' + url + '"'  + ''' > ..{}..{}download_output '''.format(DELIM, DELIM)
 	print(os.listdir())
 	log("Full command: " + full_cmd)
 	os.system(full_cmd)
@@ -83,6 +85,36 @@ def download_torrent(url, match_name, title):
 	
 	log ("Download complete")
 	
+def parseName(item):
+	'''
+	Regex to return the proper name
+	'''
+	try:
+		return item.split("]")[1].split("-")[0].strip()
+	except Exception:
+		log(str(sys.exc_info()[1]))
+		return -1
+	
+def artwork():
+	'''
+	Goes through each directory in data, download the artwork
+	'''
+	gc = GoogleImageCrawler()
+	filters = dict()
+	for folder in os.listdir(DOWNLOAD):
+		count = 0
+		for item in os.listdir(DOWNLOAD + DELIM + folder):
+			if (not count and ".mkv" in item):
+				new_name = parseName(item) + " preview"
+				
+				log ("NAME ---- " + new_name)
+				if(new_name != -1 and "show.jpg" not in os.listdir(DOWNLOAD + DELIM + folder)):
+					gc.crawl(keyword=new_name, filters=filters, max_num=1)
+					os.rename("images" + DELIM + os.listdir("images")[0], DOWNLOAD + DELIM + folder + DELIM + "show.jpg")
+				count += 1
+				time.sleep(1)
+				
+			
 
 def main():
 	'''
@@ -92,7 +124,7 @@ def main():
 	
 	feed = read_rss(config['rss_feed'])
 	for item in feed:
-		match = is_match(item.title, config['shows'])
+		match = is_match(item.title, [x[0] for x in config['shows']])
 		if(match):
 			try:
 				download_torrent(item.links[0].href, match, item.title)
