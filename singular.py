@@ -10,7 +10,8 @@ import json
 import os
 import sys
 import time
-from icrawler.builtin import GoogleImageCrawler, BingImageCrawler
+import urllib.request
+
 
 CONFIG = "settings.json"
 LOG = "singular.log"
@@ -99,22 +100,18 @@ def artwork():
 	'''
 	Goes through each directory in data, download the artwork
 	'''
-	gc = GoogleImageCrawler()
-	filters = dict()
-	for folder in os.listdir(DOWNLOAD):
-		count = 0
-		for item in os.listdir(DOWNLOAD + DELIM + folder):
-			if (not count and ".mkv" in item):
-				new_name = parseName(item) + " preview"
-				
-				log ("NAME ---- " + new_name)
-				if(new_name != -1 and "show.jpg" not in os.listdir(DOWNLOAD + DELIM + folder)):
-					gc.crawl(keyword=new_name, filters=filters, max_num=1)
-					os.rename("images" + DELIM + os.listdir("images")[0], DOWNLOAD + DELIM + folder + DELIM + "show.jpg")
-				count += 1
-				time.sleep(1)
-				
-			
+	config = read_json()
+	for item in config["shows"]:
+		filename = item[0].replace(" ", "_")
+		if filename in os.listdir(DOWNLOAD):
+			if("show.jpg" not in os.listdir(DOWNLOAD + DELIM + filename)):
+				log("URL : " + item[1])
+				opener = urllib.request.build_opener()
+				opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+				urllib.request.install_opener(opener)
+				urllib.request.urlretrieve(item[1], DOWNLOAD + DELIM + filename + DELIM + "show.jpg")
+			else:
+				log(item[0] + " already has a thumbnail")
 
 def main():
 	'''
@@ -132,7 +129,7 @@ def main():
 			except Exception:
 				log("Download error: " + str(sys.exc_info()[1]))
 	
-
+	artwork()
 
 
 if __name__ == "__main__":
