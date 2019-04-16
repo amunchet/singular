@@ -3,3 +3,6 @@ data
 data/**
 __pycache__
 __pycache__/**
+download_output
+singular.log
+singular.bat

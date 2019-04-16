@@ -11,6 +11,7 @@ import os
 import sys
 import time
 import urllib.request
+import datetime
 
 
 CONFIG = "settings.json"
@@ -26,12 +27,14 @@ def log(item):
 	Logging function
 	'''
 	print (item)
-	
+	with open(LOG, "a+") as f:
+		f.write("[" + str(datetime.datetime.now()) + "] " + str(item) + "\r\n") 
+		
 def read_json():
 	'''
 	Parses in the JSON file 
 	'''
-	log("Reading JSON")
+	
 	return json.load(open(CONFIG))
 
 
@@ -50,22 +53,19 @@ def is_match(title, matches):
 	'''
 	Checks if the title is a match for the season
 	'''
-	log("Checking for match")
+	
 	for match in matches:
 		if match.lower().replace(" ", "") in title.lower().replace(" ", ""):
-			log ("Match found!" + title + " and " + match )
+			#log ("Match found!" + title + " and " + match )
 			return match
 			
-	log("Match not found")
+	
 	return False
 
 def download_torrent(url, match_name, title):
 	'''
 	Downloads the given torrent
 	'''
-	
-	log("Downloading torrent")
-	log(cmd)
 	
 	match = match_name.replace(" ", "_")
 	
@@ -88,7 +88,7 @@ def download_torrent(url, match_name, title):
 	
 def parseName(item):
 	'''
-	Regex to return the proper name
+	Regex to return the proper name from a particular format from a particular feed
 	'''
 	try:
 		return item.split("]")[1].split("-")[0].strip()
@@ -105,20 +105,21 @@ def artwork():
 		filename = item[0].replace(" ", "_")
 		if filename in os.listdir(DOWNLOAD):
 			if("show.jpg" not in os.listdir(DOWNLOAD + DELIM + filename)):
-				log("URL : " + item[1])
+				log('''Thumbnail URL for {}: {}'''.format(item, item[1]))
 				opener = urllib.request.build_opener()
 				opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 				urllib.request.install_opener(opener)
 				urllib.request.urlretrieve(item[1], DOWNLOAD + DELIM + filename + DELIM + "show.jpg")
-			else:
-				log(item[0] + " already has a thumbnail")
+			
 
 def main():
 	'''
 	Main loop
 	'''
 	config = read_json()
-	
+	with open(LOG, "w") as f:
+		f.write("[Starting]\r\n")
+		
 	feed = read_rss(config['rss_feed'])
 	for item in feed:
 		match = is_match(item.title, [x[0] for x in config['shows']])
