@@ -1,0 +1,5 @@
+settings.json
+data
+data/**
+__pycache__
+__pycache__/**
