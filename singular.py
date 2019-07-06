@@ -35,7 +35,7 @@ def read_json():
 	Parses in the JSON file 
 	'''
 	
-	return json.load(open(CONFIG))
+	return json.load(open(CONFIG, encoding="utf8"))
 
 
 
