@@ -13,10 +13,10 @@ import time
 import urllib.request
 import datetime
 
+PATH = ""
+if "SINGULAR_PATH" in os.environ:
+    PATH =  os.environ["SINGULAR_PATH"]
 
-CONFIG = "settings.json"
-LOG = "singular.log"
-DOWNLOAD = "data"
 
 if "win32" in sys.platform.lower():
     DELIM = "\\" # Windows specific
@@ -26,6 +26,12 @@ else:
     DELIM = "/" # Linux or Mac specific
     cmd = '''aria2c --seed-time=0 '''.format(DELIM, DELIM, DELIM)
 
+CONFIG = PATH + DELIM +  "settings.json"
+LOG = "singular.log"
+
+DOWNLOAD = "data"
+if "SINGULAR_DOWNLOAD" in os.environ:
+    DOWNLOAD = os.environ["SINGULAR_DOWNLOAD"]
 
 
 
@@ -33,9 +39,9 @@ def log(item):
 	'''
 	Logging function
 	'''
-	print (item)
+	print (item.encode("utf-8", "ignore"))
 	with open(LOG, "a+") as f:
-		f.write("[" + str(datetime.datetime.now()) + "] " + str(item) + "\r\n") 
+		f.write("[" + str(datetime.datetime.now()) + "] " + str(item.encode("utf-8", "ignore")) + "\r\n") 
 		
 def read_json():
 	'''

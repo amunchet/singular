@@ -2,8 +2,12 @@ version: "3.4"
 services:
   singular_cli:
     build: "."
+    environment:
+      - SINGULAR_PATH=/data
+      - SINGULAR_DOWNLOAD=/download
     volumes:
       - .:/data
+      - ./data:/download
     entrypoint: 
       - python3
       - /data/singular.py
