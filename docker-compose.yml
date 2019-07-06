@@ -1,0 +1,7 @@
+version: "3.4"
+services:
+  singular_cli:
+    build: "."
+    volumes:
+      - .:/data
+

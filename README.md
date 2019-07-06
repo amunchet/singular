@@ -21,6 +21,9 @@ This is intended to have the data directory set as your Plex library and have th
 - Python3
 - Assumes Plex server is installed
 
+## Future
+- Going to build out a Web UI for both recording information about shows watched and episode reviews.
+- Want to be able to add additional shows and remove/reorganize finished ones.
 
 
 

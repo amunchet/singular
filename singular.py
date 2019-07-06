@@ -17,9 +17,16 @@ import datetime
 CONFIG = "settings.json"
 LOG = "singular.log"
 DOWNLOAD = "data"
-DELIM = "\\" # Windows specific
 
-cmd = '''..{}..{}aria2{}aria2c.exe --seed-time=0 '''.format(DELIM, DELIM, DELIM)
+if "win32" in sys.platform.lower():
+    DELIM = "\\" # Windows specific
+    cmd = '''..{}..{}aria2{}aria2c.exe --seed-time=0 '''.format(DELIM, DELIM, DELIM)
+
+else:
+    DELIM = "/" # Linux or Mac specific
+    cmd = '''aria2c --seed-time=0 '''.format(DELIM, DELIM, DELIM)
+
+
 
 
 def log(item):
