@@ -1,2 +1,3 @@
 pytest
 feedparser
+flask-socketio
