@@ -4,4 +4,7 @@ services:
     build: "."
     volumes:
       - .:/data
+    entrypoint: 
+      - python3
+      - /data/singular.py
 
