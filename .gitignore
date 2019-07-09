@@ -6,3 +6,5 @@ __pycache__/**
 download_output
 singular.log
 singular.bat
+**/node_modules
+**/node_modules/**
