@@ -1,7 +1,9 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+	  <div class='header'>
+	  <img class='header' src="@/../public/img/Logo.png" />
+	  </div>
+    <HelloWorld />
   </div>
 </template>
 
@@ -11,8 +13,31 @@ import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
   name: 'home',
+	data () {
+		return {
+		}
+	},
   components: {
     HelloWorld
   }
 }
 </script>
+<style scoped>
+*{
+	margin: 0;
+	padding: 0;
+}
+div.header{
+	background-color: #45454b;
+	overflow: hidden;
+}
+img.header{
+	height: 80px;
+	margin: auto;
+
+}
+div.home{
+	background-color: #ebebed;
+	min-height: 800px;
+}
+</style>
