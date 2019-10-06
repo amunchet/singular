@@ -32,6 +32,10 @@
 					</b-input>
 					<b-button class='m-1 float_left' variant='danger'><b>Dropped</b></b-button>
 					<b-button class='m-1 float_left' variant='success'><b>Completed</b></b-button>
+					Preview <br />
+					First Episode<br />
+					Final Grade <br />
+					Thumbnail?
 					</b-col>
 				</b-row>
 				<b-row class='left'>
