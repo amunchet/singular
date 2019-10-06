@@ -99,12 +99,10 @@ def download_torrent(url, match_name, title):
         return 1
 
     full_cmd = "cd " + DOWNLOAD + DELIM + match + " && "
-    full_cmd += (
-        cmd + '"' + url + '"' + """ > ..{}..{}download_output """.format(DELIM, DELIM)
-    )
+    full_cmd += cmd + '"' + url + '"' + " > /download_output "
     log("Full command: " + full_cmd)
     os.system(full_cmd)
-    with open("download_output") as f:
+    with open("/download_output") as f:
         log(f.read())
 
     # Fix for if they use weird naming conventions
@@ -124,14 +122,17 @@ def thumb(match):
 
     This basically only works since mkdir fails if an existing directory of thumbnails already exists
     """
-    path = DOWNLOAD + DELIM + match + DELIM
-    existing_files = glob.glob(path + "*/")
+    path = DOWNLOAD + DELIM + match.replace(" ", "_") + DELIM
 
+    log("Starting thumb for " + str(path))
     for item in glob.glob(path + "/*"):
-        if ".torrent" not in item and ".jpg" not in item and item[-1] != "/" and item.split(".")[0] not in existing_files:
+
+        if ".torrent" not in item and ".jpg" not in item and item[-1] != "/":
+            log('Starting command for ' + str(match))
             os.system("cd " + path + " && mkdir '" + item.split(".")[0] + "' && cd '" + item.split(".")[0] + "' && ffmpeg -i '" + item + "' -vf fps=1/15 img%03d.jpg")
+            log("Finished creating thumb")
         else:
-            print("Found either a torrent or an existing file in : " + item)
+            log("Found either a torrent or an existing file in : " + item)
 
 def parseName(item):
     """
@@ -177,12 +178,14 @@ def main():
             if match:
                 try:
                     do_thumb = download_torrent(item.links[0].href, match, item.title)
-
                 except Exception:
                     log("Download error: " + str(sys.exc_info()[1]))
                     do_thumb = 1
             
-            if len(feed) > 2 and "thumbnail" in feed[2] and do_thumb == 0:
+            temp = [x for x in config["shows"] if x[0] == match and len(x) > 2 and "thumbnail" in x[2]]
+
+            if temp != []:
+                log("Generating thumbnail...")
                 thumb(match)
 
 
