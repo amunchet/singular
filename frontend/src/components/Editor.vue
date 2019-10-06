@@ -3,6 +3,8 @@
 	      <v-jsoneditor v-model="json"
                   >
     </v-jsoneditor>
+		      <br />
+		      <b-button variant="primary" >Submit</b-button>
       </div>
 </template>
 
@@ -10,7 +12,7 @@
 
 import VJsoneditor from 'vue-jsoneditor';
 export default {
-  name: 'HelloWorld',
+  name: 'Editor',
   components: {
 	  VJsoneditor
   },

@@ -3,13 +3,13 @@
 	  <div class='header'>
 	  <img class='header' src="@/../public/img/Logo.png" />
 	  </div>
-    <HelloWorld />
+    <Editor />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import Editor from '@/components/Editor.vue'
 
 export default {
   name: 'home',
@@ -18,7 +18,7 @@ export default {
 		}
 	},
   components: {
-    HelloWorld
+  	Editor 
   }
 }
 </script>

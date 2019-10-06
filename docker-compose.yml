@@ -12,3 +12,11 @@ services:
       - python3
       - /data/singular.py
 
+  singular_frontend:
+    build: "frontend"
+    volumes:
+      - .:/data
+    entrypoint:
+      - python3
+      - /data/frontend/serve.py
+
