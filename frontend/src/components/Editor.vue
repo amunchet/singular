@@ -31,8 +31,8 @@
 					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}</b-card-title>
 <img :src="items[1]" height=300px />
 						<b-button class='mt-2 mb-2' style='width:100%' variant='primary'><font-awesome-icon icon="edit" />&nbsp;Edit</b-button><br />
-					<b-button class='mt-1 half_width tall_button' variant='danger'><font-awesome-icon icon="times" size="1x" /></b-button>
-					<b-button class='mt-1 half_width float_right tall_button' variant='success'><font-awesome-icon icon="check" size="1x" /></b-button>
+					<b-button class='mt-1 half_width tall_button' variant='danger'><font-awesome-icon icon="times" size="1x" />&nbsp;&nbsp;Dropped</b-button>
+					<b-button class='mt-1 half_width float_right tall_button' variant='success'><font-awesome-icon icon="check" size="1x" />  Completed</b-button>
 						</b-col>
 
 					</b-row>
