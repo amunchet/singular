@@ -1,46 +1,44 @@
 <template>
 	<b-container class='main'>
+		<b-button class='mb-3' @click="save" variant="success" >Submit</b-button>&nbsp;&nbsp;
+		<b-button class='mb-3' @click="save" variant="primary" >Restart Server</b-button>
 		<b-row>
 		<b-col class='left'>
-			<b-card>
+			<b-card class='m-2'>
 			<h2>RSS Feeds</h2>
 <b-container>
-				<b-row v-for="items in json.rss_feed">
+				<b-row v-for="item,idx in json.rss_feed" >
 					<b-input class='m-1 'style='width:80%; float:left;'
-						:value="items">
+						 v-model="json.rss_feed[idx]">
 					</b-input>
 					<b-button class='m-1' variant='danger'><b>X</b></b-button>
 				</b-row>
 				<b-row class='left'>
-					<b-button variant="primary">+ Add RSS Feed</b-button>
+					<b-button class='mt-2' variant="primary" @click="add_rss">+ Add RSS Feed</b-button>
 				</b-row>
 				</b-container>
 
 			</b-card>
 
-			<b-card>
-				<h2>Shows</h2>
+			<b-card class='m-2'>
+				<h2>Shows<h2 class='left'><b-button variant='primary'>+ Add Show</b-button>&nbsp;&nbsp;<b-button>Print View (Google Doc)</b-button></h2></h2>
 <b-container>
-				<b-row v-for="items in json.shows" class='m-3'>
-					<b-col style='width:10%;'>
-						<img :src="items[1]" width=100%/><br />
-						<b-button class='mt-2' style='width:100%;' variant='primary'>Change</b-button>
-					</b-col>
-					<b-col style='width:90%'>
-					<b-input class='m-1 '
-						:value="items[0]">
-					</b-input>
-					<b-button class='m-1 float_left' variant='danger'><b>Dropped</b></b-button>
-					<b-button class='m-1 float_left' variant='success'><b>Completed</b></b-button>
-					Preview <br />
-					First Episode<br />
-					Final Grade <br />
-					Thumbnail?
-					</b-col>
-				</b-row>
-				<b-row class='left'>
-					<b-button variant="primary">+ Add RSS Feed</b-button>
-				</b-row>
+				<b-card-group deck>
+				<b-card no-body class='overflow-hidden m-3 bg-secondary p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items in json.shows" >
+					<b-row no-gutters>
+						<b-col>
+
+					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}</b-card-title>
+<img :src="items[1]" height=300px />
+						<b-button class='mt-2 mb-2' style='width:100%' variant='primary'><font-awesome-icon icon="edit" />&nbsp;Edit</b-button><br />
+					<b-button class='mt-1 half_width tall_button' variant='danger'><font-awesome-icon icon="times" size="1x" /></b-button>
+					<b-button class='mt-1 half_width float_right tall_button' variant='success'><font-awesome-icon icon="check" size="1x" /></b-button>
+						</b-col>
+
+					</b-row>
+				</b-card>
+				</b-card-group>				
+
 				</b-container>
 
 	
@@ -50,8 +48,9 @@
 			<b-card>
 				<h2>Dropped Shows</h2></b-card>
 		</b-col>
+		</b-row>
+		<b-row>
 		<b-col class='left'>
-			<b-button class='mb-3' variant="success" >Submit</b-button>
 		<v-jsoneditor v-model="json"
 			      class="editor"
 			      >
@@ -72,12 +71,23 @@ export default {
 		VJsoneditor
 	},
 	mounted: function(){
+		this.init()
+	},
+	methods: {
+		init: function(){
+
 		axios.get("http://" + window.location.hostname + ":5000/get").then(data=>{
 			this.json = data.data
 		})
-
-	},
-	methods: {
+		},
+		add_rss: function(){
+			this.json.rss_feed.push("")
+		},
+		save: function(){
+			axios.post("http://" + window.location.hostname + ":5000/save", this.json).then(resp=>{
+				this.init()
+			})
+		}
 	},
 	data() {
 		return {
@@ -118,5 +128,24 @@ a {
 }
 .editor{
 	height: 500px !important;
+}
+.full_width{
+width: 100%;
+}
+.tall_button{
+	height: 40px;
+	
+}
+.half_width{
+	float: left;
+	margin-right: 2%;
+	width: 47%;
+}
+.float_right{
+	margin-right:0;
+	float: right;
+}
+.dark-bg{
+
 }
 </style>

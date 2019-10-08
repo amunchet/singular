@@ -5,6 +5,8 @@ Presently will probably just handle the settings.json file
 """
 import os
 import json
+import time
+import shutil
 
 from flask import Flask, render_template
 from flask  import request
@@ -26,6 +28,19 @@ def return_settings():
     with open(SETTINGS_FILE) as f:
         return json.dumps(json.load(f))
 
+@app.route("/save", methods=["POST"])
+def save_settings():
+    """Saves the settings.json file"""
+    data = request.get_json(force=True)
+
+    # Copy the SETTINGS file to backup
+    shutil.copyfile(SETTINGS_FILE, SETTINGS_FILE + "." + str(time.time()))
+
+    with open(SETTINGS_FILE, "r+") as f:
+        f.seek(0)
+        json.dump(data, f)
+        f.truncate()
+    return "Saved."
 
 if __name__ == "__main__":
     app.debug = True
