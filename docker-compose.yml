@@ -19,4 +19,8 @@ services:
     entrypoint:
       - python3
       - /data/frontend/serve.py
-
+   
+   nginx:
+     image: "nginx"
+     volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
