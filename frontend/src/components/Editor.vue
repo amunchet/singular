@@ -72,7 +72,7 @@ export default {
 		VJsoneditor
 	},
 	mounted: function(){
-		axios.get("http://localhost:5000/get").then(data=>{
+		axios.get("http://" + window.location.hostname + ":5000/get").then(data=>{
 			this.json = data.data
 		})
 
