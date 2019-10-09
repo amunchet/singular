@@ -52,8 +52,29 @@
 			</b-card>
 			<b-card>
 				<h2>Completed Shows</h2>
+				(Need to have grade in here as well as final thoughts)
 			<b-button>Clear Old RSS Feeds</b-button>
 			{{json.completed_shows}}
+
+				<b-card-group deck>
+				<b-card no-body class='overflow-hidden m-3 bg-success p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items in json.completed_shows" >
+					<b-row no-gutters>
+						<b-col>
+
+					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}</b-card-title>
+<img :src="items[1]" height=300px />
+				<b-form-input class='mt-3' placeholder='Final Grade' />
+					<b-form-textarea class='mt-2' placeholder='Final Thoughts' />
+						<b-button variant='primary'>Save</b-button>
+						</b-col>
+
+					</b-row>
+				</b-card>
+				</b-card-group>				
+
+
+
+
 			</b-card>
 
 
