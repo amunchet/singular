@@ -8,11 +8,15 @@ import './registerServiceWorker'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
 //Add the fontawesome icons here
-import { faEdit, faTimes, faCheck} from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faTimes, faCheck, faSortUp, faSortDown} from '@fortawesome/free-solid-svg-icons'
 
 library.add(faEdit)
 library.add(faTimes)
 library.add(faCheck)
+library.add(faSortUp)
+library.add(faSortDown)
+
+
 
 
 
