@@ -51,7 +51,7 @@
 				{{json.removed_rss_feeds}}
 			</b-card>
 			<b-card>
-				<h2>Completed Shows</h2>
+				<h2>Completed Shows<b-button class='float_right'>Restore</b-button></h2>
 				(Need to have grade in here as well as final thoughts)
 			<b-button>Clear Old RSS Feeds</b-button>
 			{{json.completed_shows}}
@@ -61,7 +61,7 @@
 					<b-row no-gutters>
 						<b-col>
 
-					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}</b-card-title>
+					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button class='float_right'>Restore</b-button></b-card-title>
 <img :src="items[1]" height=300px />
 				<b-form-input class='mt-3' placeholder='Final Grade' />
 					<b-form-textarea class='mt-2' placeholder='Final Thoughts' />
@@ -87,7 +87,7 @@
 					<b-row no-gutters>
 						<b-col>
 
-					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}</b-card-title>
+					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button class='float_right'>Restore</b-button></b-card-title>
 <img :src="items[1]" height=300px />
 				<b-form-textarea class='mt-3' placeholder='Preview' />
 				<b-form-textarea class='mt-2' placeholder='Dropped Reason...'/>
@@ -133,7 +133,7 @@ export default {
 	methods: {
 		init: function(){
 
-		axios.get("http://" + window.location.hostname + ":5000/get").then(data=>{
+		axios.get("http://" + window.location.hostname + ":" + this.$port + "/get").then(data=>{
 			this.json = data.data
 		})
 		},
@@ -144,7 +144,7 @@ export default {
 			this.json.rss_feed.push("")
 		},
 		save: function(){
-			axios.post("http://" + window.location.hostname + ":5000/save", this.json).then(resp=>{
+			axios.post("http://" + window.location.hostname + ":" + this.$port + "/save", this.json).then(resp=>{
 				this.init()
 			})
 		},
