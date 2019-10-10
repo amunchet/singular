@@ -1,7 +1,12 @@
 <template>
 	<b-container class='main'>
-		<b-button class='mb-3' @click="save" variant="success" >Submit</b-button>&nbsp;&nbsp;
-		<b-button class='mb-3' @click="save" variant="primary" >Restart Server</b-button>
+		<b-button class='mb-3 float_right' @click="save" variant="success" >Submit</b-button>&nbsp;&nbsp;
+		<b-button class='mb-3' variant="primary" @click="restart_server()">Restart Server</b-button>
+
+    <b-card class='dark-bg p-2 m-2 left' v-show="show_docker_output">
+      <b-button @click="show_docker_output = false" class='mt-0 mr-0 float_right' variant="danger"><font-awesome-icon icon="times" /></b-button>
+      <div v-html="docker_output"></div>
+    </b-card>
 		<b-row>
 		<b-col class='left'>
 			<b-card class='m-2'>
@@ -11,7 +16,7 @@
 					<b-input class='m-1 'style='width:80%; float:left;'
 						 v-model="json.rss_feed[idx]">
 					</b-input>
-					<b-button class='m-1' variant='danger' @click="drop_rss(idx)"><b>X</b></b-button>
+          <b-button class='m-1' variant='danger' @click="drop_rss(idx)"><b><font-awesome-icon icon="times" /></b></b-button>
 				</b-row>
 				<b-row class='left'>
 					<b-button class='mt-2' variant="primary" @click="add_rss">+ Add RSS Feed</b-button>
@@ -129,6 +134,11 @@ export default {
 	},
 	mounted: function(){
 		this.init()
+
+    const self = this;          
+    this.intervalid1 = setInterval(function(){
+      self.get_docker_status()
+    }, 3000);
 	},
 	methods: {
 		init: function(){
@@ -155,6 +165,20 @@ export default {
 			this.json["removed_rss_feeds"].push(this.json.rss_feed[idx])
 			this.json.rss_feed.splice(idx,1)
 		},
+    get_docker_status: function(){
+      axios.get("http://" + window.location.hostname + ":" + this.$port + "/docker/status").then(resp => {
+        this.docker_output = resp.data.replace("\n", "<br />")
+      }).catch(resp=>{
+        this.docker_output = "ERROR : <div style='color: red'>" + resp.response.data + "</div>"
+      })
+    },
+    restart_server: function(){
+
+        this.show_docker_output = true 
+      axios.get("http://" + window.location.hostname + ":" + this.$port + "/docker/restart").then(()=>{
+      this.get_docker_status()
+      })
+    },
 		complete_show: function(idx){
 			console.log("Completing " + idx)
 			if(this.json.completed_shows == undefined){
@@ -168,6 +192,8 @@ export default {
 	data() {
 		return {
 			show_add: false,
+      docker_output: "...",
+      show_docker_output: false,
 			json: {
 				success: true
 			}
@@ -223,6 +249,10 @@ width: 100%;
 	float: right;
 }
 .dark-bg{
-
+  background-color: #43434e;
+  color: white;
+}
+.red{
+  color: red !important;
 }
 </style>

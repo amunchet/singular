@@ -22,7 +22,6 @@ if "SINGULAR_SETTINGS_FILE" in os.environ:
     SETTINGS_FILE = os.environ["SINGULAR_SETTINGS_FILE"]
 
 DOCKER_NAME = "singular_cli"
-DOCKER_NAME = "jupiter"
 if "SINGULAR_DOCKER_NAME" in os.environ:
     DOCKER_NAME = os.environ["SINGULAR_DOCKER_NAME"]
 
@@ -58,10 +57,10 @@ def docker_status():
     docker_env = docker.from_env()
     dockers = [ str(x.name) for x in docker_env.containers.list() ]
     if [ x for x in dockers if DOCKER_NAME in x ] == []:
-        return str(dockers) + "Docker " + str(DOCKER_NAME) + " not running.", 410 # HTTP code gone
+        return str(dockers) + "<br /><br />Docker " + str(DOCKER_NAME) + " not running.", 410 # HTTP code gone
     
     matched_docker = [x for x in docker_env.containers.list() if DOCKER_NAME in str(x.name)][0]
-    return str(str(matched_docker.logs()).split("\\n")[:-1])
+    return matched_docker.logs().decode("utf-8")
 
 @app.route("/docker/restart")
 def docker_restart():
