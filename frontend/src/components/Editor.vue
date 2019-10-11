@@ -6,7 +6,7 @@
     <b-card class='dark-bg p-2 m-2 left' v-show="show_docker_output">
       <b-button @click="show_docker_output = false" class='mt-0 mr-0 ' variant="danger"><font-awesome-icon icon="times" /></b-button>
 	<br /><br />
-      <div class='maxheight' v-html="docker_output"></div>
+      <div id='dockerinfo' class='maxheight' v-html="docker_output"></div>
     </b-card>
 		<b-row>
 		<b-col class='left'>
@@ -145,8 +145,10 @@ export default {
 		response: function(data){
 			this.show_docker_output = true
 			this.docker_output += data + "<br />"
-			var container = this.$el.querySelector(".maxheight")
-			container.scrollTop = container.scrollHeight
+			this.$nextTick(()=>{
+				var container = this.$el.querySelector("#dockerinfo")
+				container.scrollTop = container.scrollHeight
+			})
 		},
 	},
 	methods: {
@@ -266,4 +268,8 @@ width: 100%;
 	max-height: 300px;
 	overflow-y: scroll;
 }
+.maxheight::-webkit-scrollbar { width: 0 !important }
+.maxheight{ overflow: -moz-scrollbars-none; }
+.maxheight{ -ms-overflow-style: none; }
+
 </style>
