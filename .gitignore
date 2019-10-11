@@ -9,3 +9,4 @@ singular.bat
 **/node_modules
 **/node_modules/**
 **/*.sw*
+npm-debug.log

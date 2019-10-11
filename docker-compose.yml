@@ -16,11 +16,17 @@ services:
     build: "frontend"
     volumes:
       - .:/data
+    ports:
+      - "7500:7500"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock 
+      - /usr/bin/docker:/usr/bin/docker 
+      - ./:/data
     entrypoint:
       - python3
       - /data/frontend/serve.py
    
-   nginx:
-     image: "nginx"
-     volumes:
+  nginx:
+    image: "nginx"
+    volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro

@@ -9,7 +9,7 @@ import time
 import shutil
 import docker
 
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory
 from flask  import request
 from flask_cors import CORS
 
@@ -25,9 +25,35 @@ DOCKER_NAME = "singular_cli"
 if "SINGULAR_DOCKER_NAME" in os.environ:
     DOCKER_NAME = os.environ["SINGULAR_DOCKER_NAME"]
 
-app = Flask(__name__
+app = Flask(__name__,
+        static_url_path="/"
         )
 CORS(app)
+
+# Static routes
+@app.route("/js/<path:path>")
+def send_js(path):  # pragma: no cover
+    return send_from_directory("./dist/js", path)
+
+
+@app.route("/css/<path:path>")
+def send_css(path):  # pragma: no cover
+    return send_from_directory("./dist/css", path)
+
+
+@app.route("/img/<path:path>")
+def send_img(path):  # pragma: no cover
+    return send_from_directory("./dist/img", path)
+
+@app.route("/")
+def send_home(): #pragma: no cover
+    return send_from_directory("./dist/", "index.html")
+
+@app.route("/dist/<path:path>")
+def send_dist(path):  # pragma: no cover
+    return send_from_directory("./dist", path)
+
+
 
 @app.route("/get")
 def return_settings():
