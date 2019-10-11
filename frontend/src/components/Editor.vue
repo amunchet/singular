@@ -136,9 +136,15 @@ export default {
 		this.init()
 
     const self = this;          
-    this.intervalid1 = setInterval(function(){
-      self.get_docker_status()
-    }, 3000);
+	},
+	sockets: {
+		connect: function(){
+			console.log("Socket connected")
+		},
+		response: function(data){
+			this.show_docker_output = true
+			this.docker_output += data + "<br />"
+		},
 	},
 	methods: {
 		init: function(){
@@ -173,12 +179,9 @@ export default {
       })
     },
     restart_server: function(){
-
-        this.show_docker_output = true 
-      axios.get("http://" + window.location.hostname + ":" + this.$port + "/docker/restart").then(()=>{
-      this.get_docker_status()
-      })
+	this.$socket.emit("restart")
     },
+
 		complete_show: function(idx){
 			console.log("Completing " + idx)
 			if(this.json.completed_shows == undefined){
@@ -192,7 +195,7 @@ export default {
 	data() {
 		return {
 			show_add: false,
-      docker_output: "...",
+      docker_output: "",
       show_docker_output: false,
 			json: {
 				success: true

@@ -9,9 +9,11 @@ import time
 import shutil
 import docker
 
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, stream_with_context, Response
 from flask  import request
 from flask_cors import CORS
+from flask_socketio import SocketIO
+from flask_socketio import send, emit
 
 SETTINGS_FOLDER = "../../"
 if "SINGULAR_SETTINGS_FOLDER" in os.environ:
@@ -28,6 +30,8 @@ if "SINGULAR_DOCKER_NAME" in os.environ:
 app = Flask(__name__,
         static_url_path="/"
         )
+app.config["SECRET_KEY"] = "asdfzxcva43afaazvxc"
+socketio = SocketIO(app)
 CORS(app)
 
 # Static routes
@@ -77,6 +81,8 @@ def save_settings():
         f.truncate()
     return "Saved."
 
+# Docker section
+
 @app.route("/docker/status")
 def docker_status():
     """Checks the docker status"""
@@ -86,22 +92,40 @@ def docker_status():
         return str(dockers) + "<br /><br />Docker " + str(DOCKER_NAME) + " not running.", 410 # HTTP code gone
     
     matched_docker = [x for x in docker_env.containers.list() if DOCKER_NAME in str(x.name)][0]
-    return matched_docker.logs().decode("utf-8")
 
-@app.route("/docker/restart")
+    def generate():
+        yield matched_docker.logs(stream=True).next().decode("utf-8")
+    return Response(stream_with_context(generate()))
+    # return matched_docker.logs(stream=True).next().decode("utf-8")
+
+@socketio.on('message')
+def handle_message(message):
+    emit("response", "Received " + str(message))
+
+#@app.route("/docker/restart")
+@socketio.on('restart')
 def docker_restart():
     """Restarts the given docker"""
     docker_env = docker.from_env()
     dockers = [str(x.name) for x in docker_env.containers.list(all=True)]
     if [ x for x in dockers if DOCKER_NAME in x ] == []:
-        return str(dockers) + ", Docker " + str(DOCKER_NAME) + " not found", 410 # HTTP code gone
+        emit("response", "ERROR: " + str(dockers) + ", Docker " + str(DOCKER_NAME) + " not found")
+
+    matched_docker = [x for x in docker_env.containers.list(all=True) if DOCKER_NAME in str(x.name)][0]
+    matched_docker.restart()
+    emit("response", "Docker Restarted.")
 
     matched_docker = [x for x in docker_env.containers.list() if DOCKER_NAME in str(x.name)][0]
-    matched_docker.restart()
-    return "Restarted"
+
+    for line in matched_docker.logs(stream=True):
+        emit("response", str(line.strip()))
+    
+    emit("response", "Docker finished.")
+
 
 
 if __name__ == "__main__":
     app.debug = True
     app.config["ENV"] = "development"
-    app.run(host="0.0.0.0", port=7500)
+    #app.run(host="0.0.0.0", port=7500)
+    socketio.run(app, host="0.0.0.0", port=7500)

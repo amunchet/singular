@@ -14,6 +14,11 @@ services:
 
   singular_frontend:
     build: "frontend"
+    restart: always
+    environment:
+      - SINGULAR_SETTINGS_FOLDER=/data/
+      - SINGULAR_SETTINGS_FILE=settings.json
+      - SINGULAR_DOCKER_NAME=singular_singular_cli
     volumes:
       - .:/data
     ports:

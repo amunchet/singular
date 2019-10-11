@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import './registerServiceWorker'
 
+import VueSocketIO from 'vue-socket.io'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 
@@ -34,6 +35,27 @@ Vue.use(BootstrapVue)
 
 
 Vue.config.productionTip = false
+
+
+// Socket IO library
+
+const options = { }; //Options object to pass into SocketIO
+
+var url = window.location.href
+var url_arr = url.split("/")
+var socket_url = url_arr[0] + "//" +  url_arr[2]
+
+
+Vue.use(new VueSocketIO({
+    debug: true,
+    connection: socket_url,
+    vuex: {
+        store,
+        actionPrefix: 'SOCKET_',
+        mutationPrefix: 'SOCKET_'
+    },
+    options: { } //Optional options
+}))
 
 new Vue({
   router,
