@@ -10,3 +10,4 @@ singular.bat
 **/node_modules/**
 **/*.sw*
 npm-debug.log
+backup/
