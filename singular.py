@@ -182,7 +182,7 @@ def main():
                     log("Download error: " + str(sys.exc_info()[1]))
                     do_thumb = 1
             
-            temp = [x for x in config["shows"] if x[0] == match and len(x) > 2 and "thumbnail" in x[2]]
+            temp = [x for x in config["shows"] if x[0] == match and len(x) > 2 and "thumbnail" in x[2] and str(x[2]["thumbnail"]) == "1"]
 
             if temp != []:
                 log("Generating thumbnail...")
