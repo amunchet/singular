@@ -26,8 +26,8 @@
 
 			</b-card>
 			<b-card class='m-2'>
-				<b-modal id="modal-1" title="Add/Edit Show">
-					<AddShow />
+				<b-modal id="modal-1" title="Add/Edit Show" @ok="handleAddOk()">
+					<AddShow v-on:updateNew="handleAddUpdate" />
 				</b-modal>
 				<h2>Shows<h2 class='left'><b-button v-b-modal.modal-1 @click="add_show()" variant='primary'>+ Add Show</b-button>&nbsp;&nbsp;<b-button>Print View (Google Doc)</b-button></h2></h2>
 <b-container>
@@ -39,7 +39,7 @@
 					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}</b-card-title>
 <img :src="items[1]" height=300px />
 						<b-button class='mt-2 mb-2' style='width:100%' variant='primary'><font-awesome-icon icon="edit" />&nbsp;Edit</b-button><br />
-					<b-button class='mt-1 half_width tall_button' variant='danger'><font-awesome-icon icon="times" size="1x" />&nbsp;&nbsp;Dropped</b-button>
+					<b-button @click="drop_show(idx)" class='mt-1 half_width tall_button' variant='danger'><font-awesome-icon icon="times" size="1x" />&nbsp;&nbsp;Dropped</b-button>
 					<b-button class='mt-1 half_width float_right tall_button' variant='success' @click='complete_show(idx)'><font-awesome-icon icon="check" size="1x" />  Completed</b-button>
 						</b-col>
 
@@ -60,14 +60,13 @@
 				<h2>Completed Shows<b-button class='float_right'>Restore</b-button></h2>
 				(Need to have grade in here as well as final thoughts)
 			<b-button>Clear Old RSS Feeds</b-button>
-			{{json.completed_shows}}
 
 				<b-card-group deck>
-				<b-card no-body class='overflow-hidden m-3 bg-success p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items in json.completed_shows" >
+				<b-card no-body class='overflow-hidden m-3 bg-success p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.completed_shows" >
 					<b-row no-gutters>
 						<b-col>
 
-					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button class='float_right'>Restore</b-button></b-card-title>
+					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button class='float_right' @click="restore_show(idx, 'completed')" >Restore</b-button></b-card-title>
 <img :src="items[1]" height=300px />
 				<b-form-input class='mt-3' placeholder='Final Grade' />
 					<b-form-textarea class='mt-2' placeholder='Final Thoughts' />
@@ -89,11 +88,11 @@
 <b-button>Clear Old RSS Feeds</b-button>
 <b-container>
 				<b-card-group deck>
-				<b-card no-body class='overflow-hidden m-3 bg-secondary p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items in json.dropped" >
+				<b-card no-body class='overflow-hidden m-3 bg-secondary p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.dropped" >
 					<b-row no-gutters>
 						<b-col>
 
-					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button class='float_right'>Restore</b-button></b-card-title>
+					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button @click="restore_show(idx, 'dropped')" class='float_right'>Restore</b-button></b-card-title>
 <img :src="items[1]" height=300px />
 				<b-form-textarea class='mt-3' placeholder='Preview' />
 				<b-form-textarea class='mt-2' placeholder='Dropped Reason...'/>
@@ -186,7 +185,15 @@ export default {
     restart_server: function(){
 	this.$socket.emit("restart")
     },
+  drop_show: function(idx){
+			console.log("Dropping " + idx)
+			if(this.json.dropped == undefined){
+				this.json.dropped = []
+			}
+			this.json['dropped'].push(this.json.shows[idx])
+			this.json.shows.splice(idx,1)
 
+		},
 		complete_show: function(idx){
 			console.log("Completing " + idx)
 			if(this.json.completed_shows == undefined){
@@ -195,10 +202,34 @@ export default {
 			this.json['completed_shows'].push(this.json.shows[idx])
 			this.json.shows.splice(idx,1)
 
-		}
+		},
+    restore_show: function(idx, type){
+      console.log("Restoring show of " + type + ": " + idx)
+      if(this.json.shows == undefined){
+          this.json.shows = []
+        }
+
+      if (type == "completed"){
+        this.json['shows'].push(this.json.completed_shows[idx])
+        this.json.completed_shows.splice(idx, 1)
+      }
+      if(type == "dropped"){
+
+        this.json['shows'].push(this.json.dropped[idx])
+        this.json.dropped.splice(idx, 1)
+      }
+    },
+    handleAddUpdate: function(val){
+      this.temp_add = val
+    },
+    handleAddOk: function(){
+      console.log(this.temp_add)
+      this.json.shows.unshift(JSON.parse(JSON.stringify(this.temp_add)))
+    }
 	},
 	data() {
 		return {
+      temp_add: "",
 			show_add: false,
       docker_output: "",
       show_docker_output: false,
