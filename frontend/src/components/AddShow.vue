@@ -26,10 +26,10 @@ export default{
   name: 'AddShow',
     data(){
     return {
-      newshow: {
-        0: "",
-        1: "",
-        2 : {
+      newshow: [
+        "",
+        "",
+        {
           "thumbnail" : "",
           "preview" : "",
           "first_episode" : "",
@@ -37,7 +37,7 @@ export default{
           "final_thoughts" : "",
           "grade" : ""
         }
-      }
+        ]
     }
   },
 watch: {
