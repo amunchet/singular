@@ -1,6 +1,7 @@
 <template>
 	<b-container>
 		<b-row class='m-1 p-1'>
+
 			<b-input v-model="newshow[0]" placeholder='Show Name?' />
 		</b-row>
 		</b-row>
@@ -18,7 +19,6 @@
 		</b-row>
     <img class='m-2' :src="newshow[1]" width=200px /> <br />
 	</b-container>
-
 </template>
 
 <script>
@@ -43,16 +43,19 @@ export default{
 watch: {
   "newshow": {
     handler(newVal, oldVal){
-
-      this.$emit("updateNew", newVal)
+            this.$emit("updateNew", newVal)
     },
     deep: true
   },
 },
   created: function(){
+    if(this.edit != undefined && this.edit != ""){
+      this.newshow = this.edit
+    }
   },
   methods:{
   },
+  props: ['edit']
 }
 </script>
 

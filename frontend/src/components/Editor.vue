@@ -38,7 +38,11 @@
 
 					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}</b-card-title>
 <img :src="items[1]" height=300px />
-						<b-button class='mt-2 mb-2' style='width:100%' variant='primary'><font-awesome-icon icon="edit" />&nbsp;Edit</b-button><br />
+<b-modal id="modal-2" title="Add/Edit Show" @ok="editShow()">
+					<AddShow v-on:updateNew="handleAddUpdate" :edit="items" />
+				</b-modal>
+
+						<b-button class='mt-2 mb-2' style='width:100%' variant='primary'><font-awesome-icon icon="edit" v-b-modal.modal-2 @click="editShow(idx)"/>&nbsp;Edit</b-button><br />
 					<b-button @click="drop_show(idx)" class='mt-1 half_width tall_button' variant='danger'><font-awesome-icon icon="times" size="1x" />&nbsp;&nbsp;Dropped</b-button>
 					<b-button class='mt-1 half_width float_right tall_button' variant='success' @click='complete_show(idx)'><font-awesome-icon icon="check" size="1x" />  Completed</b-button>
 						</b-col>
@@ -224,7 +228,14 @@ export default {
     },
     handleAddOk: function(){
       console.log(this.temp_add)
+      if (this.json.shows == undefined){
+        this.json.shows = []
+      }
       this.json.shows.unshift(JSON.parse(JSON.stringify(this.temp_add)))
+    },
+    editShow: function(idx){
+      this.json.shows[idx] = JSON.parse(JSON.stringify(this.temp_add))
+
     }
 	},
 	data() {

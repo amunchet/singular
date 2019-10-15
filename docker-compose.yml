@@ -23,6 +23,7 @@ services:
       - .:/data
     ports:
       - "7500:7500"
+      - "7501:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock 
       - /usr/bin/docker:/usr/bin/docker 

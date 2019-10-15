@@ -62,6 +62,12 @@ def send_dist(path):  # pragma: no cover
 @app.route("/get")
 def return_settings():
     """Returns the output of settings.json"""
+    if not os.path.exists(SETTINGS_FOLDER + SETTINGS_FILE):
+        with open(SETTINGS_FOLDER + SETTINGS_FILE, "w") as f:
+            output = "{\"shows\":[],\"rss\": []}"
+            f.write(output)
+            return output
+
     with open(SETTINGS_FOLDER + SETTINGS_FILE) as f:
         return json.dumps(json.load(f))
 
