@@ -1,5 +1,6 @@
 version: "3.4"
 services:
+  # Workhorse client - DON'T run for development (will download many things)
   singular_cli:
     build: "."
     environment:
@@ -12,27 +13,35 @@ services:
       - python3
       - /data/singular.py
 
+  # Vue development docker
   singular_frontend:
     build: "frontend"
+    volumes:
+      - ./frontend/src:/data # Only bring in src, have docker ADD other files?
+    ports:
+      - "7501:8080"
+
+  # Production backend docker
+  singular_backend:
+    build: "backend"
     restart: always
     environment:
       - SINGULAR_SETTINGS_FOLDER=/data/
       - SINGULAR_SETTINGS_FILE=settings.json
       - SINGULAR_DOCKER_NAME=singular_singular_cli
     volumes:
-      - .:/data
-    ports:
-      - "7500:7500"
-      - "7501:8080"
-    volumes:
       - /var/run/docker.sock:/var/run/docker.sock 
       - /usr/bin/docker:/usr/bin/docker 
       - ./:/data
     entrypoint:
       - python3
-      - /data/frontend/serve.py
-   
+      - /data/backend/serve.py
+
+  # Nginx to serve the compiled vue files from dist
   nginx:
     image: "nginx"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend/dist:/data
+    ports:
+      - "7500:7500"
