@@ -17,7 +17,7 @@ services:
   singular_frontend:
     build: "frontend"
     volumes:
-      - ./frontend/src:/data # Only bring in src, have docker ADD other files?
+      - ./frontend/src:/data/src # Only bring in src, have docker ADD other files?
     ports:
       - "7501:8080"
 
@@ -29,6 +29,8 @@ services:
       - SINGULAR_SETTINGS_FOLDER=/data/
       - SINGULAR_SETTINGS_FILE=settings.json
       - SINGULAR_DOCKER_NAME=singular_singular_cli
+    ports:
+      - "7500:7500"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock 
       - /usr/bin/docker:/usr/bin/docker 
