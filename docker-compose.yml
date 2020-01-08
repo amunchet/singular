@@ -20,6 +20,9 @@ services:
       - ./frontend/src:/data/src # Only bring in src, have docker ADD other files?
     ports:
       - "7501:8080"
+    entrypoint:
+      - bash
+      - /data/entrypoint.sh
 
   # Production backend docker
   singular_backend:
