@@ -1,6 +1,6 @@
 <template>
 	<b-container class='main'>
-		<b-button class='mb-3 float_right' @click="save" variant="success" >Submit</b-button>&nbsp;&nbsp;
+    {{json}}
 		<b-button class='mb-3' variant="primary" @click="restart_server()">Restart Server</b-button>
 
     <b-card class='dark-bg p-2 m-2 left' v-show="show_docker_output">
@@ -14,7 +14,7 @@
 				<h2><font-awesome-icon class='pb-2 mr-2' icon='sort-down' />RSS Feeds</h2>
 <b-container>
 				<b-row v-for="item,idx in json.rss_feed" >
-					<b-input class='m-1 'style='width:80%; float:left;' @blur="save"
+					<b-input class='m-1 'style='width:80%; float:left;' 
 						 v-model="json.rss_feed[idx]">
 					</b-input>
           <b-button class='m-1' variant='danger' @click="drop_rss(idx)"><b><font-awesome-icon icon="times" /></b></b-button>
@@ -30,7 +30,6 @@
 					<AddShow v-on:updateNew="handleAddUpdate" />
 				</b-modal>
         <h2>Shows<h2 class='left'><b-button v-b-modal.modal-1 @click="add_show()" variant='primary'>+ Add Show</b-button>&nbsp;&nbsp;<b-button>Print View (Google Doc)</b-button><b-button>Return to Normal View</b-button></h2></h2>
-<b-container>
 				<b-card-group deck>
 				<b-card no-body class='overflow-hidden m-3 bg-primary p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.shows" >
 					<b-row no-gutters>
@@ -51,7 +50,6 @@
 				</b-card>
 				</b-card-group>				
 
-				</b-container>
 
 	
 			
@@ -61,21 +59,19 @@
 				{{json.removed_rss_feeds}}
 			</b-card>
 			<b-card>
-				<h2>Completed Shows<b-button class='float_right'>Restore</b-button></h2>
+				<h2>Completed Shows</h2>
 				(Need to have grade in here as well as final thoughts)
-			<b-button>Clear Old RSS Feeds</b-button>
 
-				<b-card-group deck>
-				<b-card no-body class='overflow-hidden m-3 bg-success p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.completed_shows" >
-					<b-row no-gutters>
-						<b-col>
+      <b-card-group deck>
+        <b-card no-body class='overflow-hidden m-3 bg-success p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.completed_shows" >
+          <b-row no-gutters v-if="items">
+            <b-col>
 
-					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button class='float_right' @click="restore_show(idx, 'completed')" >Restore</b-button></b-card-title>
-<img :src="items[1]" height=300px />
-				<b-form-input class='mt-3' placeholder='Final Grade' />
-					<b-form-textarea class='mt-2' placeholder='Final Thoughts' />
-						<b-button variant='primary'>Save</b-button>
-						</b-col>
+              <b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button class='float_right' @click="restore_show(idx, 'completed')" >Restore</b-button></b-card-title>
+          <img :src="items[1]" height=300px />
+          <b-form-input class="mt-3" v-model="items[2].grade" placeholder='Final Grade' />
+            <b-form-textarea  v-model="items[2].final_thoughts" class='mt-2' placeholder='Final Thoughts' />
+            </b-col>
 
 					</b-row>
 				</b-card>
@@ -89,24 +85,21 @@
 
 			<b-card>
 				<h2>Dropped Shows</h2>
-<b-button>Clear Old RSS Feeds</b-button>
-<b-container>
 				<b-card-group deck>
 				<b-card no-body class='overflow-hidden m-3 bg-secondary p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.dropped" >
-					<b-row no-gutters>
+          <b-row no-gutters v-if="items">
 						<b-col>
 
 					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button @click="restore_show(idx, 'dropped')" class='float_right'>Restore</b-button></b-card-title>
 <img :src="items[1]" height=300px />
-				<b-form-textarea class='mt-3' placeholder='Preview' />
-				<b-form-textarea class='mt-2' placeholder='Dropped Reason...'/>
+				<b-form-textarea v-model="items[2].preview" class='mt-3' placeholder='Preview' />
+				<b-form-textarea v-model="items[2].final_thoughts" class='mt-2' placeholder='Dropped Reason...'/>
 						</b-col>
 
 					</b-row>
 				</b-card>
 				</b-card-group>				
 
-				</b-container>
 
 
 			</b-card>
@@ -154,6 +147,15 @@ export default {
 			})
 		},
 	},
+  watch:{
+    json: {
+      deep: true,
+
+      handler: async function(){
+      this.save()
+    }
+    }
+  },
 	methods: {
 		init: function(){
 
@@ -168,11 +170,13 @@ export default {
       console.log(this.json)
 			this.json.rss_feed.push("")
 		},
-		save: function(){
-      
+		save: async function(){
+      if (this.json.success == undefined){ 
 			axios.post("http://" + window.location.hostname + ":" + this.$port + "/save", this.json).then(resp=>{
-				this.init()
+				//this.init()
+        console.log("Saved!")
 			})
+      }
 		},
 		drop_rss: function(idx){
 			if(this.json.removed_rss_feeds == undefined){
@@ -180,7 +184,6 @@ export default {
 			}
 			this.json["removed_rss_feeds"].push(this.json.rss_feed[idx])
 			this.json.rss_feed.splice(idx,1)
-      this.save()
 		},
     get_docker_status: function(){
       axios.get("http://" + window.location.hostname + ":" + this.$port + "/docker/status").then(resp => {
@@ -208,7 +211,6 @@ export default {
 			}
 			this.json['completed_shows'].push(this.json.shows[idx])
 			this.json.shows.splice(idx,1)
-
 		},
     restore_show: function(idx, type){
       console.log("Restoring show of " + type + ": " + idx)
@@ -235,11 +237,9 @@ export default {
         this.json.shows = []
       }
       this.json.shows.unshift(JSON.parse(JSON.stringify(this.temp_add)))
-      this.save()
     },
     editShow: function(idx){
       this.json.shows[idx] = JSON.parse(JSON.stringify(this.temp_add))
-      this.save()
     }
 	},
 	data() {
@@ -261,6 +261,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.selected{
+  background-color: lightblue !important;
+  border: 3px solid #efefee !important;
+}
 .float_left{
 	float: left;
 }
