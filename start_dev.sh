@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # Start singular development server
+docker-compose up --build -d singular_frontend
+docker-compose up --build -d singular_backend
 
-# Step 1: Start up the frontend dev server with hot reload for vue
-
-# Step 2: Start up the backend with debug (no gunicorn)
 

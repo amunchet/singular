@@ -165,6 +165,7 @@ export default {
 			this.show_add = true 
 		},
 		add_rss: function(){
+      console.log(this.json)
 			this.json.rss_feed.push("")
 		},
 		save: function(){
