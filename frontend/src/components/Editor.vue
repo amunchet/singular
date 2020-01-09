@@ -14,7 +14,7 @@
 				<h2><font-awesome-icon class='pb-2 mr-2' icon='sort-down' />RSS Feeds</h2>
 <b-container>
 				<b-row v-for="item,idx in json.rss_feed" >
-					<b-input class='m-1 'style='width:80%; float:left;'
+					<b-input class='m-1 'style='width:80%; float:left;' @blur="save"
 						 v-model="json.rss_feed[idx]">
 					</b-input>
           <b-button class='m-1' variant='danger' @click="drop_rss(idx)"><b><font-awesome-icon icon="times" /></b></b-button>
@@ -29,7 +29,7 @@
 				<b-modal id="modal-1" title="Add/Edit Show" @ok="handleAddOk()">
 					<AddShow v-on:updateNew="handleAddUpdate" />
 				</b-modal>
-				<h2>Shows<h2 class='left'><b-button v-b-modal.modal-1 @click="add_show()" variant='primary'>+ Add Show</b-button>&nbsp;&nbsp;<b-button>Print View (Google Doc)</b-button></h2></h2>
+        <h2>Shows<h2 class='left'><b-button v-b-modal.modal-1 @click="add_show()" variant='primary'>+ Add Show</b-button>&nbsp;&nbsp;<b-button>Print View (Google Doc)</b-button><b-button>Return to Normal View</b-button></h2></h2>
 <b-container>
 				<b-card-group deck>
 				<b-card no-body class='overflow-hidden m-3 bg-primary p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.shows" >
@@ -38,11 +38,11 @@
 
 					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}</b-card-title>
 <img :src="items[1]" height=300px />
-<b-modal id="modal-2" title="Add/Edit Show" @ok="editShow()">
+<b-modal :id="'modal-' + idx" title="Add/Edit Show" @ok="editShow()">
 					<AddShow v-on:updateNew="handleAddUpdate" :edit="items" />
 				</b-modal>
 
-						<b-button class='mt-2 mb-2' style='width:100%' variant='primary'><font-awesome-icon icon="edit" v-b-modal.modal-2 @click="editShow(idx)"/>&nbsp;Edit</b-button><br />
+						<b-button v-b-modal="'modal-' + idx" class='mt-2 mb-2' style='width:100%' variant='primary'><font-awesome-icon icon="edit"  />&nbsp;Edit</b-button><br />
 					<b-button @click="drop_show(idx)" class='mt-1 half_width tall_button' variant='danger'><font-awesome-icon icon="times" size="1x" />&nbsp;&nbsp;Dropped</b-button>
 					<b-button class='mt-1 half_width float_right tall_button' variant='success' @click='complete_show(idx)'><font-awesome-icon icon="check" size="1x" />  Completed</b-button>
 						</b-col>
@@ -169,6 +169,7 @@ export default {
 			this.json.rss_feed.push("")
 		},
 		save: function(){
+      
 			axios.post("http://" + window.location.hostname + ":" + this.$port + "/save", this.json).then(resp=>{
 				this.init()
 			})
@@ -179,6 +180,7 @@ export default {
 			}
 			this.json["removed_rss_feeds"].push(this.json.rss_feed[idx])
 			this.json.rss_feed.splice(idx,1)
+      this.save()
 		},
     get_docker_status: function(){
       axios.get("http://" + window.location.hostname + ":" + this.$port + "/docker/status").then(resp => {
@@ -233,10 +235,11 @@ export default {
         this.json.shows = []
       }
       this.json.shows.unshift(JSON.parse(JSON.stringify(this.temp_add)))
+      this.save()
     },
     editShow: function(idx){
       this.json.shows[idx] = JSON.parse(JSON.stringify(this.temp_add))
-
+      this.save()
     }
 	},
 	data() {
