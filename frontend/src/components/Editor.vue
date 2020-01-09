@@ -70,7 +70,9 @@
               <b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button class='float_right' @click="restore_show(idx, 'completed')" >Restore</b-button></b-card-title>
           <img :src="items[1]" height=300px />
           <b-form-input class="mt-3" v-model="items[2].grade" placeholder='Final Grade' />
+            <b-form-text>Show Grade</b-form-text>
             <b-form-textarea  v-model="items[2].final_thoughts" class='mt-2' placeholder='Final Thoughts' />
+              <b-form-text>Final Thoughts</b-form-text>
             </b-col>
 
 					</b-row>
@@ -93,7 +95,9 @@
 					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button @click="restore_show(idx, 'dropped')" class='float_right'>Restore</b-button></b-card-title>
 <img :src="items[1]" height=300px />
 				<b-form-textarea v-model="items[2].preview" class='mt-3' placeholder='Preview' />
+          <b-form-text>Preview Thoughts</b-form-text>
 				<b-form-textarea v-model="items[2].final_thoughts" class='mt-2' placeholder='Dropped Reason...'/>
+          <b-form-text>Dropped Reason</b-form-text>
 						</b-col>
 
 					</b-row>
@@ -267,6 +271,11 @@ export default {
 }
 .float_left{
 	float: left;
+}
+.form-text{
+  color: black !important;
+  width: 100%;
+  text-align: left;
 }
 h3 {
 	margin: 40px 0 0;
