@@ -9,7 +9,7 @@
 
 <script>
 // @ is an alias to /src
-import Editor from '@/components/Editor.vue'
+import Editor from '@/views/Editor.vue'
 
 export default {
   name: 'home',
