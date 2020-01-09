@@ -53,15 +53,9 @@
 
 	
 			
-			</b-card><b-card>
-				<h2>Removed RSS Feeds</h2>
-				<b-button>Clear Old RSS Feeds</b-button>
-				{{json.removed_rss_feeds}}
 			</b-card>
-			<b-card>
+     			<b-card>
 				<h2>Completed Shows</h2>
-				(Need to have grade in here as well as final thoughts)
-
       <b-card-group deck>
         <b-card no-body class='overflow-hidden m-3 bg-success p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.completed_shows" >
           <b-row no-gutters v-if="items">
@@ -111,6 +105,14 @@
 
 
 			</b-card>
+ <b-card>
+				<h2>Removed RSS Feeds</h2>
+				<b-button @click="json.removed_rss_feeds = []">Clear Old RSS Feeds</b-button>
+        <b-container>
+        <b-table class='mt-3' small striped :items="removed_rss_feeds()" />
+        </b-container>
+			</b-card>
+
 		</b-col>
 		</b-row>
 		<b-row>
@@ -171,6 +173,11 @@ export default {
 			this.json = data.data
 		})
 		},
+    removed_rss_feeds: function(){
+      return this.json.removed_rss_feeds.map(x=>{
+        return { "Removed RSS URL" : x}
+      })
+    },
 		add_show: function(){
 			this.show_add = true 
 		},
