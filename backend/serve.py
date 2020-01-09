@@ -64,7 +64,7 @@ def return_settings():
     """Returns the output of settings.json"""
     if not os.path.exists(SETTINGS_FOLDER + SETTINGS_FILE):
         with open(SETTINGS_FOLDER + SETTINGS_FILE, "w") as f:
-            output = "{\"shows\":[],\"rss\": []}"
+            output = "{\"shows\":[],\"rss_feed\": []}"
             f.write(output)
             return output
 
