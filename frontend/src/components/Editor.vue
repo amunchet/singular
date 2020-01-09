@@ -67,7 +67,9 @@
           <b-row no-gutters v-if="items">
             <b-col>
 
-              <b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button class='float_right' @click="restore_show(idx, 'completed')" >Restore</b-button></b-card-title>
+              <b-card-title class='p-1 text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button class='float_right' variant="primary" @click="restore_show(idx, 'completed')" >
+                  <font-awesome-icon icon="undo" size="1x" />
+                </b-button></b-card-title>
           <img :src="items[1]" height=300px />
           <b-form-input class="mt-3" v-model="items[2].grade" placeholder='Final Grade' />
             <b-form-text>Show Grade</b-form-text>
@@ -92,7 +94,9 @@
           <b-row no-gutters v-if="items">
 						<b-col>
 
-					<b-card-title class='p-1 overflow-hidden text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button @click="restore_show(idx, 'dropped')" class='float_right'>Restore</b-button></b-card-title>
+					<b-card-title class='p-1 text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button variant="primary" @click="restore_show(idx, 'dropped')" class='float_right'>
+              <font-awesome-icon icon="undo" size="1px" />
+            </b-button></b-card-title>
 <img :src="items[1]" height=300px />
 				<b-form-textarea v-model="items[2].preview" class='mt-3' placeholder='Preview' />
           <b-form-text>Preview Thoughts</b-form-text>
