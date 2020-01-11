@@ -1,6 +1,5 @@
 <template>
 	<b-container class='main'>
-    {{json}}
 		<b-button class='mb-3' variant="primary" @click="restart_server()">Restart Server</b-button>
 
     <b-card class='dark-bg p-2 m-2 left' v-show="show_docker_output">

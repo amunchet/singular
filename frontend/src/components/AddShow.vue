@@ -5,7 +5,9 @@
 			<b-input v-model="newshow[0]" aria-describedby="name_help" placeholder='Show Name' />
         <b-form-text id='name_help'>Name of the Show</b-form-text>
 		</b-row>
-		</b-row>
+    <b-row class='m-1 p-1'>
+      <Season :inp_season="newshow[2].season" :inp_year="newshow[2].year" @year="(yr)=>{newshow[2].year = yr}" @season="(ssn)=>{newshow[2].season = ssn}" />
+    </b-row>
 		<b-row class='m-1 p-1'>
 			<b-input aria-describedby="url_help" v-model="newshow[1]" placeholder='URL (http(s)://XXX.jpg)' />
         <b-form-text id='url_help'>URL of Show Cover</b-form-text>
@@ -29,6 +31,7 @@
 </template>
 
 <script>
+import Season from '@/components/Season'
 export default{
   name: 'AddShow',
     data(){
@@ -42,19 +45,24 @@ export default{
           "first_episode" : "",
           "first_impressions": "",
           "final_thoughts" : "",
-          "grade" : ""
+          "grade" : "",
+          "season" : "",
+          "year" : ""
         }
         ]
     }
   },
-watch: {
-  "newshow": {
-    handler(newVal, oldVal){
-            this.$emit("updateNew", newVal)
-    },
-    deep: true
+  components: {
+    Season
   },
-},
+  watch: {
+    "newshow": {
+      handler(newVal, oldVal){
+        this.$emit("updateNew", newVal)
+      },
+      deep: true
+    },
+  },
   created: function(){
     if(this.edit != undefined && this.edit != ""){
       this.newshow = this.edit
