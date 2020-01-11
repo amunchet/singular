@@ -29,6 +29,10 @@
 					<AddShow v-on:updateNew="handleAddUpdate" />
 				</b-modal>
         <h2>Shows<h2 class='left'><b-button v-b-modal.modal-1 @click="add_show()" variant='primary'>+ Add Show</b-button>&nbsp;&nbsp;<b-button>Print View (Google Doc)</b-button><b-button>Return to Normal View</b-button></h2></h2>
+
+        <GoogleDocsView :json="json" />
+
+
 				<b-card-group deck>
 				<b-card no-body class='overflow-hidden m-3 bg-primary p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.shows" >
 					<b-row no-gutters>
@@ -130,12 +134,14 @@
 
 import VJsoneditor from 'vue-jsoneditor';
 import AddShow from '@/components/AddShow'
+import GoogleDocsView from '@/components/GoogleDocsView'
 import axios from 'axios'
 export default {
 	name: 'Editor',
 	components: {
 		VJsoneditor,
-		AddShow
+		AddShow,
+    GoogleDocsView
 
 	},
 	mounted: function(){
