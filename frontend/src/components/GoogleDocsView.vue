@@ -3,10 +3,6 @@
     <div class='header'>
       This is the view to copy and paste notes about the given shows into a Google Document repository (or whatever word processor you would like).  Storing all shows will clutter the JSON file, so I recommend moving to more permanent storage, such as Google Docs.
     </div>
-    <pre>
-    {{print_json}}
-  
-    </pre>
 
     <div v-for="season in print_json" v-if="season">
       <h2>{{season.season}} {{season.year}}</h2>
@@ -37,6 +33,53 @@
 export default{
   name: "GoogleDocsView",
   props: ["json"],
+  methods: {
+    processJSON: function(){
+      /* Processes the JSON into Google Doc format */
+
+      var found_seasons = [{
+        "season" : "Unknown",
+        "year" : "Unknown",
+        "shows" : []
+      }]
+      var all_shows = [...this.json.dropped, ...this.json.completed_shows, ...this.json.shows]
+      all_shows.forEach(val=>{
+        var created_show = {
+          "name" : val[0],
+          "thumbnail" : val[1],
+          ...val[2]
+        }
+
+        if (val[2] != undefined && val[2].season != undefined && val[2].year != undefined){
+          var found = found_seasons.filter(x=>x.year == val[2].year && x.season == val[2].season).length
+          if(found < 1){
+            found_seasons.push({
+              "season" : val[2].season,
+              "year" : val[2].year,
+              "shows" : [ created_show]
+            })
+          }else{
+            found_seasons.forEach(found_val => {
+              if(found_val.season == val[2].season && found_val.year == val[2].year){
+                found_val.shows.push(created_show)
+              }
+            })
+          }
+
+        }else if(val[2].season == undefined || val[2].year == undefined){
+          found_seasons.forEach(found_val =>{
+            if(found_val.season == "Unknown" && found_val.year == "Unknown"){
+              found_val.shows.push(created_show)
+            }
+          })
+                  }
+      })
+      this.print_json = found_seasons
+    }
+  },
+  mounted: function(){
+    this.processJSON()
+  },
   data(){
     return{
       print_json: 
@@ -87,4 +130,16 @@ export default{
 </script>
 
 <style scoped lang="scss">
+table{
+  width: 100%;
+   border-collapse: collapse;
+}
+table,tr,th,td{
+  border: 1px solid black;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+table tbody tr{
+  border: 1px solid black;
+}
 </style>
