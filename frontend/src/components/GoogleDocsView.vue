@@ -9,10 +9,10 @@
     <table>
       <tr><th>Name</th><th>Grade</th><th>Note</th></tr>
       <tr v-for="shows in season.shows" v-if="shows">
-        <td>
+        <td style='width:25%'>
           <img :src="shows.thumbnail" />
           {{shows.name}}</td>
-        <td>{{shows.grade}}</td>
+        <td style="text-align: center;width:10%;" :class="returnGradeColor(shows.grade)" >{{shows.grade}}</td>
         <td><b>Preview</b><br />
           {{shows.preview}}
           <br />
@@ -34,6 +34,13 @@ export default{
   name: "GoogleDocsView",
   props: ["json"],
   methods: {
+    returnGradeColor: function(grade){
+      if (grade != "undefined" && grade[0] != undefined){
+      return "grade" + grade[0].toUpperCase()
+      }else{
+      }
+      return "grade"
+    },
     processJSON: function(){
       /* Processes the JSON into Google Doc format */
 
@@ -130,6 +137,10 @@ export default{
 </script>
 
 <style scoped lang="scss">
+h2{
+  text-transform: uppercase;
+  margin-top: 20px;
+}
 table{
   width: 100%;
    border-collapse: collapse;
@@ -141,5 +152,21 @@ table,tr,th,td{
 }
 table tbody tr{
   border: 1px solid black;
+}
+/* Grades Styling */
+.gradeA{
+  background-color: green;
+}
+.gradeB{
+  background-color: darkgreen;
+}
+.gradeC{
+  background-color: darkyellow;
+}
+.gradeD{
+  background-color: darkorange;
+}
+.grade, .gradeF{
+  background-color: grey;
 }
 </style>

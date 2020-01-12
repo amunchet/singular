@@ -1,6 +1,8 @@
 <template>
 	<b-container class='main'>
-		<b-button class='mb-3' variant="primary" @click="restart_server()">Restart Server</b-button>
+		<b-button class='mb-3' variant="primary" @click="restart_server()">
+      <font-awesome-icon class='mr-2' icon="play" />
+      Run Singular Downloader</b-button>
 
     <b-card class='dark-bg p-2 m-2 left' v-show="show_docker_output">
       <b-button @click="show_docker_output = false" class='mt-0 mr-0 ' variant="danger"><font-awesome-icon icon="times" /></b-button>
