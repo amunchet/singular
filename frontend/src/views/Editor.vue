@@ -1,6 +1,6 @@
 <template>
 	<b-container class='main'>
-		<b-button class='mb-3' variant="primary" @click="restart_server()">
+		<b-button class='mb-3' variant="warning" @click="restart_server()">
       <font-awesome-icon class='mr-2' icon="play" />
       Run Singular Downloader</b-button>
 
