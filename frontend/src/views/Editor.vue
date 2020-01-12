@@ -62,7 +62,7 @@
      			<b-card>
 				<h2>Completed Shows</h2>
       <b-card-group deck>
-        <b-card no-body class='overflow-hidden m-3 bg-success p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.completed_shows" >
+        <b-card no-body class='overflow-hidden m-3 bg-success p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.completed_shows" v-if="items != undefined && items[2] != undefined">
           <b-row no-gutters v-if="items">
             <b-col>
 
@@ -89,7 +89,7 @@
 			<b-card>
 				<h2>Dropped Shows</h2>
 				<b-card-group deck>
-				<b-card no-body class='overflow-hidden m-3 bg-secondary p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.dropped" >
+				<b-card no-body class='overflow-hidden m-3 bg-secondary p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.dropped" v-if="items != undefined && items[2] != undefined">
           <b-row no-gutters v-if="items">
 						<b-col>
 
@@ -181,9 +181,11 @@ export default {
 		})
 		},
     removed_rss_feeds: function(){
+      if (this.json != undefined && this.json.removed_rss_feeds != undefined){
       return this.json.removed_rss_feeds.map(x=>{
         return { "Removed RSS URL" : x}
       })
+      }
     },
 		add_show: function(){
 			this.show_add = true 

@@ -72,7 +72,6 @@ export default{
               }
             })
           }
-
         }else if(val[2].season == undefined || val[2].year == undefined){
           found_seasons.forEach(found_val =>{
             if(found_val.season == "Unknown" && found_val.year == "Unknown"){
