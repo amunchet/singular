@@ -85,7 +85,8 @@
 
           <b-form-input @blur="save()" class="mt-3" v-model="items[2].grade" placeholder='Final Grade' />
             <b-form-text>Show Grade</b-form-text>
-            <b-form-textarea  @blur="save()" v-model="items[2].final_thoughts" class='mt-2' placeholder='Final Thoughts' />
+            <b-form-textarea  :ref="'text-' + idx" @blur="items[2].final_thoughts = saveTextarea('text-', idx)" class='mt-2' :value="items[2].final_thoughts" placeholder='Final Thoughts' >
+            </b-form-textarea>
               <b-form-text>Final Thoughts</b-form-text>
             </b-col>
 
@@ -117,9 +118,17 @@
 						<b-button v-b-modal="'modal-dropped-' + idx" class='mt-2 mb-2' style='width:100%' variant='primary'><font-awesome-icon icon="edit"  />&nbsp;Edit</b-button><br />
 
 
-				<b-form-textarea @blur="save()" v-model="items[2].preview" class='mt-3' placeholder='Preview' />
+
+            <b-form-textarea  :ref="'dropped-preview-' + idx" @blur="items[2].preview = saveTextarea('dropped-preview-', idx)" class='mt-2' :value="items[2].preview" placeholder='Preview'>
+            </b-form-textarea>
+
           <b-form-text>Preview Thoughts</b-form-text>
-				<b-form-textarea @blur="save()" v-model="items[2].final_thoughts" class='mt-2' placeholder='Dropped Reason...'/>
+
+
+            <b-form-textarea  :ref="'dropped-' + idx" @blur="items[2].final_thoughts = saveTextarea('dropped-', idx)" class='mt-2' :value="items[2].final_thoughts" placeholder='Dropped Reason...' >
+            </b-form-textarea>
+
+
           <b-form-text>Dropped Reason</b-form-text>
 						</b-col>
 
@@ -185,12 +194,18 @@ export default {
 		},
 	},
   	methods: {
+
 		init: function(){
 
 		axios.get("http://" + window.location.hostname + ":" + this.$port + "/get").then(data=>{
 			this.json = data.data
 		})
 		},
+      saveTextarea: function(nm, idx, sv){
+        // Returns the value and bypasses the update until the blur is called
+        this.save()
+        return "" + this.$refs[nm + idx][0].$el.value
+      },
     removed_rss_feeds: function(){
       if (this.json != undefined && this.json.removed_rss_feeds != undefined){
       return this.json.removed_rss_feeds.map(x=>{
