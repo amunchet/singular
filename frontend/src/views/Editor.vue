@@ -27,10 +27,10 @@
 
 			</b-card>
 			<b-card class='m-2'>
-				<b-modal id="modal-1" title="Add/Edit Show" @ok="handleAddOk()">
+				<b-modal id="modal-add" title="Add/Edit Show" @ok="handleAddOk()">
 					<AddShow v-on:updateNew="handleAddUpdate" />
 				</b-modal>
-        <h2>Shows<h2 class='left'><b-button v-b-modal.modal-1 @click="add_show()" variant='primary'>+ Add Show</b-button>&nbsp;&nbsp;<b-button>Print View (Google Doc)</b-button><b-button>Return to Normal View</b-button></h2></h2>
+        <h2>Shows<h2 class='left'><b-button v-b-modal.modal-add @click="add_show()" variant='primary'>+ Add Show</b-button>&nbsp;&nbsp;<b-button>Print View (Google Doc)</b-button><b-button>Return to Normal View</b-button></h2></h2>
 
         <GoogleDocsView :json="json" />
 
@@ -70,6 +70,14 @@
                   <font-awesome-icon icon="undo" size="1x" />
                 </b-button></b-card-title>
           <img :src="items[1]" height=300px />
+
+<b-modal :id="'modal-' + idx" title="Add/Edit Show" @ok="editShow()">
+					<AddShow v-on:updateNew="handleAddUpdate" :edit="items" />
+				</b-modal>
+
+						<b-button v-b-modal="'modal-' + idx" class='mt-2 mb-2' style='width:100%' variant='primary'><font-awesome-icon icon="edit"  />&nbsp;Edit</b-button><br />
+
+
           <b-form-input class="mt-3" v-model="items[2].grade" placeholder='Final Grade' />
             <b-form-text>Show Grade</b-form-text>
             <b-form-textarea  v-model="items[2].final_thoughts" class='mt-2' placeholder='Final Thoughts' />
@@ -97,6 +105,13 @@
               <font-awesome-icon icon="undo" size="1px" />
             </b-button></b-card-title>
 <img :src="items[1]" height=300px />
+<b-modal :id="'modal-' + idx" title="Add/Edit Show" @ok="editShow()">
+					<AddShow v-on:updateNew="handleAddUpdate" :edit="items" />
+				</b-modal>
+
+						<b-button v-b-modal="'modal-' + idx" class='mt-2 mb-2' style='width:100%' variant='primary'><font-awesome-icon icon="edit"  />&nbsp;Edit</b-button><br />
+
+
 				<b-form-textarea v-model="items[2].preview" class='mt-3' placeholder='Preview' />
           <b-form-text>Preview Thoughts</b-form-text>
 				<b-form-textarea v-model="items[2].final_thoughts" class='mt-2' placeholder='Dropped Reason...'/>

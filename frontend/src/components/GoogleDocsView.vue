@@ -10,7 +10,7 @@
       <tr><th>Name</th><th>Grade</th><th>Note</th></tr>
       <tr v-for="shows in season.shows" v-if="shows">
         <td style='width:25%'>
-          <img :src="shows.thumbnail" />
+          <img height=100px :src="shows.thumbnail" />
           {{shows.name}}</td>
         <td style="text-align: center;width:10%;" :class="returnGradeColor(shows.grade)" >{{shows.grade}}</td>
         <td><b>Preview</b><br />
@@ -33,13 +33,25 @@
 export default{
   name: "GoogleDocsView",
   props: ["json"],
+  watch: {
+    json: function(){
+      try{
+      this.processJSON()
+      }catch(e){
+        console.log(e)
+      }
+    }
+  },
   methods: {
     returnGradeColor: function(grade){
+      try{
       if (grade != "undefined" && grade[0] != undefined){
       return "grade" + grade[0].toUpperCase()
-      }else{
       }
       return "grade"
+      }catch(e){
+        return "grade"
+      }
     },
     processJSON: function(){
       /* Processes the JSON into Google Doc format */
@@ -49,7 +61,16 @@ export default{
         "year" : "Unknown",
         "shows" : []
       }]
-      var all_shows = [...this.json.dropped, ...this.json.completed_shows, ...this.json.shows]
+    
+      this.json.dropped.forEach(val=>{
+        console.log(val)
+        if(val[2] != undefined){
+          val[2].grade = "F"
+        }
+      })
+
+      var all_shows = [...this.json.dropped, ...this.json.completed_shows]
+
       all_shows.forEach(val=>{
         var created_show = {
           "name" : val[0],
@@ -57,8 +78,10 @@ export default{
           ...val[2]
         }
 
+      
+
         if (val[2] != undefined && val[2].season != undefined && val[2].year != undefined){
-          var found = found_seasons.filter(x=>x.year == val[2].year && x.season == val[2].season).length
+          var found = found_seasons.filter(x=>x.year !=undefined && x.season != undefined && x.year == val[2].year && x.season == val[2].season).length
           if(found < 1){
             found_seasons.push({
               "season" : val[2].season,
@@ -72,7 +95,7 @@ export default{
               }
             })
           }
-        }else if(val[2].season == undefined || val[2].year == undefined){
+        }else if(val[2] != undefined && (val[2].season == undefined || val[2].year == undefined)){
           found_seasons.forEach(found_val =>{
             if(found_val.season == "Unknown" && found_val.year == "Unknown"){
               found_val.shows.push(created_show)
@@ -84,7 +107,6 @@ export default{
     }
   },
   mounted: function(){
-    this.processJSON()
   },
   data(){
     return{
