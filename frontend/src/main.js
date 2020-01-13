@@ -38,6 +38,9 @@ Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false
 
+// Toggle Button
+import ToggleButton from 'vue-js-toggle-button'
+Vue.use(ToggleButton)
 
 // Socket IO library
 

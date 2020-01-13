@@ -30,9 +30,14 @@
 				<b-modal id="modal-add" title="Add/Edit Show" @ok="handleAddOk()">
 					<AddShow v-on:updateNew="handleAddUpdate" />
 				</b-modal>
-        <h2>Shows<h2 class='left'><b-button v-b-modal.modal-add @click="add_show()" variant='primary'>+ Add Show</b-button>&nbsp;&nbsp;<b-button>Print View (Google Doc)</b-button><b-button>Return to Normal View</b-button></h2></h2>
+        <div class='float-right'>
+          Normal
+<toggle-button :width="50" height="30" v-model="showPrint"/>
+          Print
+        </div>
+        <h2>Shows<h2 class='left'><b-button v-b-modal.modal-add @click="add_show()" variant='primary'>+ Add Show</b-button></h2></h2>
 
-        <GoogleDocsView :json="json" />
+        <GoogleDocsView v-show="showPrint" :json="json" />
 
 
 				<b-card-group deck>
@@ -59,7 +64,7 @@
 	
 			
 			</b-card>
-     			<b-card>
+     			<b-card v-show="!showPrint">
 				<h2>Completed Shows</h2>
       <b-card-group deck>
         <b-card no-body class='overflow-hidden m-3 bg-success p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.completed_shows" v-if="items != undefined && items[2] != undefined">
@@ -94,7 +99,7 @@
 			</b-card>
 
 
-			<b-card>
+			<b-card v-show="!showPrint">
 				<h2>Dropped Shows</h2>
 				<b-card-group deck>
 				<b-card no-body class='overflow-hidden m-3 bg-secondary p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.dropped" v-if="items != undefined && items[2] != undefined">
@@ -283,6 +288,7 @@ export default {
 	},
 	data() {
 		return {
+      showPrint: false,
       temp_add: "",
 			show_add: false,
       docker_output: "",
