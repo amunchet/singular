@@ -1,3 +1,4 @@
+# New Documentation coming soon - this is grossly out of date.
 ## Description
 Singular is a small project aimed to perform a nightly download from an RSS feed of torrents.  
 
