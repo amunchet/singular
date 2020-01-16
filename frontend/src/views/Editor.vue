@@ -35,8 +35,9 @@
 <toggle-button :width="50" :height="30" v-model="showPrint"/>
           Print
         </div>
-        <h2>Shows<h2 class='left'><b-button v-b-modal.modal-add @click="add_show()" variant='primary'>+ Add Show</b-button></h2></h2>
+        <h2>Shows<h2 class='left'><b-button v-if="!showPrint" v-b-modal.modal-add @click="add_show()" variant='primary'>+ Add Show</b-button></h2></h2>
 
+  <b-button variant="danger" v-if="showPrint">Clear Completed and Dropped</b-button>
         <GoogleDocsView v-show="showPrint" :json="json" />
 
 
