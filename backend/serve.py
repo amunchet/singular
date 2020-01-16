@@ -153,7 +153,7 @@ def docker_restart():
 
 
 if __name__ == "__main__":
-    app.debug = True
-    app.config["ENV"] = "development"
+    #app.debug = True
+    #app.config["ENV"] = "development"
     #app.run(host="0.0.0.0", port=7500)
     socketio.run(app, host="0.0.0.0", port=7500)
