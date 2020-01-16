@@ -4,13 +4,14 @@
       This is the view to copy and paste notes about the given shows into a Google Document repository (or whatever word processor you would like).  Storing all shows will clutter the JSON file, so I recommend moving to more permanent storage, such as Google Docs.
     </div>
 
+
     <div v-for="season in print_json" v-if="season">
       <h2>{{season.season}} {{season.year}}</h2>
     <table>
       <tr><th>Name</th><th>Grade</th><th>Note</th></tr>
       <tr v-for="shows in season.shows" v-if="shows">
         <td style='width:25%'>
-          <img height=100px :src="shows.thumbnail" />
+          <img height=100px :src="shows.thumbnail_url" />
           {{shows.name}}</td>
         <td style="text-align: center;width:10%;" :class="returnGradeColor(shows.grade)" >{{shows.grade}}</td>
         <td><b>Preview</b><br />
@@ -63,7 +64,6 @@ export default{
       }]
     
       this.json.dropped.forEach(val=>{
-        console.log(val)
         if(val[2] != undefined){
           val[2].grade = "F"
         }
@@ -74,10 +74,9 @@ export default{
       all_shows.forEach(val=>{
         var created_show = {
           "name" : val[0],
-          "thumbnail" : val[1],
+          "thumbnail_url" : val[1],
           ...val[2]
         }
-
       
 
         if (val[2] != undefined && val[2].season != undefined && val[2].year != undefined){
@@ -103,7 +102,24 @@ export default{
           })
                   }
       })
-      this.print_json = found_seasons
+      
+      if(found_seasons[0].shows.length == 0){
+        found_seasons.splice(0, 1)
+      }
+      this.print_json = found_seasons.sort((first, sec)=>{
+        var seasons = {"spring" : 1, "summer" : 2, "fall" : 3, "winter" : 4}
+        if(first['year'] > sec['year']){
+          return -1
+        }else if(first['year'] < sec['year']){
+          return 1
+        }else{
+          if(seasons[first['season'].toLowerCase()] > seasons[sec['season'].toLowerCase()]){
+            return -1
+          }else{
+            return 1
+          }
+        }
+      })
     }
   },
   mounted: function(){

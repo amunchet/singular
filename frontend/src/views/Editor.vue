@@ -15,10 +15,21 @@
 				<h2><font-awesome-icon class='pb-2 mr-2' icon='sort-down' />RSS Feeds</h2>
 <b-container>
 				<b-row v-for="item,idx in json.rss_feed" >
+        <b-col style='width:75%;'>
+
+          <b-button class='m-1' variant='danger' @click="drop_rss(idx)"><b><font-awesome-icon icon="times" /></b></b-button>
 					<b-input @blur="save()" class='m-1 'style='width:80%; float:left;' 
 						 v-model.lazy="json.rss_feed[idx]">
 					</b-input>
-          <b-button class='m-1' variant='danger' @click="drop_rss(idx)"><b><font-awesome-icon icon="times" /></b></b-button>
+        </b-col>
+        <b-col>
+            <b-list-group horizontal>
+            <b-list-group-item variant="dark" small v-for="listed, idxx in rss[item]" v-if="listed">
+              {{listed}}
+            </b-list-group-item>
+          </b-list-group>
+          </b-col>
+
 				</b-row>
 				<b-row class='left'>
 					<b-button class='mt-2' variant="primary" @click="add_rss">+ Add RSS Feed</b-button>
@@ -65,16 +76,16 @@
 	
 			
 			</b-card>
-     			<b-card v-show="!showPrint">
+     			<b-card v-show="!showPrint" class='m-2'>
 				<h2>Completed Shows</h2>
       <b-card-group deck>
         <b-card no-body class='overflow-hidden m-3 bg-success p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.completed_shows" v-if="items != undefined && items[2] != undefined">
           <b-row no-gutters v-if="items">
             <b-col>
 
-              <b-card-title class='p-1 text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button class='float_right' variant="primary" @click="restore_show(idx, 'completed')" >
-                  <font-awesome-icon icon="undo"  />
-                </b-button></b-card-title>
+              <b-card-title class='p-1 text-light' style='height: 30px;text-align:center;'>{{items[0]}}<div class='hover_hand float_right' variant="link" @click="restore_show(idx, 'completed')" >
+                  <font-awesome-icon icon="undo" class='text-white'/>
+                </div></b-card-title>
           <img :src="items[1]" height=300px />
 
 <b-modal :id="'modal-completed-' + idx" title="Add/Edit Show" @ok="editShow()">
@@ -101,16 +112,16 @@
 			</b-card>
 
 
-			<b-card v-show="!showPrint">
+			<b-card v-show="!showPrint" class='m-2'>
 				<h2>Dropped Shows</h2>
 				<b-card-group deck>
 				<b-card no-body class='overflow-hidden m-3 bg-secondary p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.dropped" v-if="items != undefined && items[2] != undefined">
           <b-row no-gutters v-if="items">
 						<b-col>
 
-					<b-card-title class='p-1 text-light' style='height: 30px;text-align:center;'>{{items[0]}}<b-button variant="primary" @click="restore_show(idx, 'dropped')" class='float_right'>
-              <font-awesome-icon icon="undo"  />
-            </b-button></b-card-title>
+					<b-card-title class='p-1 text-light' style='height: 30px;text-align:center;'>{{items[0]}}<div @click="restore_show(idx, 'dropped')" class='float_right hover_hand'>
+              <font-awesome-icon icon="undo" class='text-white' />
+            </div></b-card-title>
 <img :src="items[1]" height=300px />
 <b-modal :id="'modal-dropped-' + idx" title="Add/Edit Show" @ok="editShow()">
 					<AddShow v-on:updateNew="handleAddUpdate" :edit="items" />
@@ -140,7 +151,7 @@
 
 
 			</b-card>
- <b-card>
+ <b-card class='m-2'>
 				<h2>Removed RSS Feeds</h2>
 				<b-button @click="json.removed_rss_feeds = []">Clear Old RSS Feeds</b-button>
         <b-container>
@@ -153,7 +164,7 @@
 		<b-row>
 		<b-col class='left'>
 		<v-jsoneditor v-model="json"
-			      class="editor"
+			      class="editor m-2"
 			      >
 		</v-jsoneditor>
 		</b-col>
@@ -200,6 +211,10 @@ export default {
 
 		axios.get("http://" + window.location.hostname + ":" + this.$port + "/get").then(data=>{
 			this.json = data.data
+      axios.get("http://" + window.location.hostname + ":" + this.$port + "/rss").then(res=>{
+        this.rss = res.data
+
+      })
 		})
 		},
       saveTextarea: function(nm, idx, sv){
@@ -305,6 +320,7 @@ export default {
       showPrint: false,
       temp_add: "",
 			show_add: false,
+      rss: [],
       docker_output: "",
       show_docker_output: false,
 			json: {
@@ -386,4 +402,10 @@ width: 100%;
 .maxheight{ overflow: -moz-scrollbars-none; }
 .maxheight{ -ms-overflow-style: none; }
 
+/deep/ .list-group-item{
+  padding: .33rem .5rem;
+}
+.hover_hand{
+  cursor: pointer;
+}
 </style>
