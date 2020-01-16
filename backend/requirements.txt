@@ -26,3 +26,4 @@ Werkzeug==0.16.0
 zipp==0.6.0
 flask_socketio
 gevent
+feedparser

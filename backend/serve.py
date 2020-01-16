@@ -8,12 +8,15 @@ import json
 import time
 import shutil
 import docker
+import re
 
 from flask import Flask, render_template, send_from_directory, stream_with_context, Response
 from flask  import request
 from flask_cors import CORS
 from flask_socketio import SocketIO
 from flask_socketio import send, emit
+
+import feedparser
 
 SETTINGS_FOLDER = "../../"
 if "SINGULAR_SETTINGS_FOLDER" in os.environ:
@@ -70,6 +73,25 @@ def return_settings():
 
     with open(SETTINGS_FOLDER + SETTINGS_FILE) as f:
         return json.dumps(json.load(f))
+
+
+@app.route("/rss")
+def return_rss():
+    """Retrieves and returns the RSS feeds top 5"""
+    if not os.path.exists(SETTINGS_FOLDER + SETTINGS_FILE):
+        return "Cannot find settings.json", 409
+
+    settings = ''
+    with open(SETTINGS_FOLDER + SETTINGS_FILE) as f:
+        settings = json.load(f)
+    
+    retval = {}
+    for feed in settings['rss_feed']:
+        a = feedparser.parse(feed)
+        retval[feed] = [re.sub(r'[\(\[].*?[\)\]]', '', x['title']).split('-')[0].strip()[:10] for x in a.entries[:5]]
+
+    return json.dumps(retval), 200
+
 
 @app.route("/save", methods=["POST"])
 def save_settings():
