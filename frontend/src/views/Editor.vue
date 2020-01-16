@@ -12,9 +12,12 @@
 		<b-row>
 		<b-col class='left'>
 			<b-card class='m-2'>
-				<h2><font-awesome-icon class='pb-2 mr-2' icon='sort-down' />RSS Feeds</h2>
+				<h2>
+          <font-awesome-icon class='pb-2 mr-2 hover_hand' icon='sort-down' v-show="show_rss" @click="show_rss=false" />
+            <font-awesome-icon v-show="!show_rss" @click="show_rss=true" class='pt-2 mb-1  mr-2 hover_hand' icon='caret-right' />
+            RSS Feeds</h2>
 <b-container>
-				<b-row v-for="item,idx in json.rss_feed" >
+				<b-row v-show="show_rss" v-for="item,idx in json.rss_feed" >
         <b-col style='width:75%;'>
 
           <b-button class='m-1' variant='danger' @click="drop_rss(idx)"><b><font-awesome-icon icon="times" /></b></b-button>
@@ -42,17 +45,23 @@
 					<AddShow v-on:updateNew="handleAddUpdate" />
 				</b-modal>
         <div class='float-right'>
-          Normal
-<toggle-button :width="50" :height="30" v-model="showPrint"/>
-          Print
+          <font-awesome-icon class='pt-1 mt-2 mr-3 text-muted' icon="th-large" size=2x />
+<toggle-button :width="50" :height="30" color="green" v-model="showPrint"/>
+ <font-awesome-icon icon="print" class='pt-1 mt-2 ml-3 text-muted' size=2x /> 
         </div>
-        <h2>Shows<h2 class='left'><b-button v-if="!showPrint" v-b-modal.modal-add @click="add_show()" variant='primary'>+ Add Show</b-button></h2></h2>
+        <h2>
 
-  <b-button variant="danger" v-if="showPrint">Clear Completed and Dropped</b-button>
+          <font-awesome-icon class='pb-2 mr-2 hover_hand' icon='sort-down' v-show="show_shows" @click="show_shows=false" />
+            <font-awesome-icon v-show="!show_shows" @click="show_shows=true" class='pt-2 mb-1  mr-2 hover_hand' icon='caret-right' />
+
+
+          Shows<h2 class='left'><b-button class='mt-2' v-if="!showPrint" v-b-modal.modal-add @click="add_show()" variant='primary'>+ Add Show</b-button></h2></h2>
+
+  <b-button variant="danger" v-if="showPrint" class='mb-2' @click="clear_completed()">Clear Completed and Dropped</b-button>
         <GoogleDocsView v-show="showPrint" :json="json" />
 
 
-				<b-card-group deck>
+				<b-card-group v-show="show_shows" deck>
 				<b-card no-body class='overflow-hidden m-3 bg-primary p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.shows" >
 					<b-row no-gutters>
 						<b-col>
@@ -77,8 +86,14 @@
 			
 			</b-card>
      			<b-card v-show="!showPrint" class='m-2'>
-				<h2>Completed Shows</h2>
-      <b-card-group deck>
+				<h2>
+
+
+          <font-awesome-icon class='pb-2 mr-2 hover_hand' icon='sort-down' v-show="show_completed" @click="show_completed=false" />
+            <font-awesome-icon v-show="!show_completed" @click="show_completed=true" class='pt-2 mb-1  mr-2 hover_hand' icon='caret-right' />
+
+        Completed Shows</h2>
+      <b-card-group v-show="show_completed" deck>
         <b-card no-body class='overflow-hidden m-3 bg-success p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.completed_shows" v-if="items != undefined && items[2] != undefined">
           <b-row no-gutters v-if="items">
             <b-col>
@@ -113,8 +128,14 @@
 
 
 			<b-card v-show="!showPrint" class='m-2'>
-				<h2>Dropped Shows</h2>
-				<b-card-group deck>
+				<h2>
+
+
+          <font-awesome-icon class='pb-2 mr-2 hover_hand' icon='sort-down' v-show="show_dropped" @click="show_dropped=false" />
+            <font-awesome-icon v-show="!show_dropped" @click="show_dropped=true" class='pt-2 mb-1  mr-2 hover_hand' icon='caret-right' />
+
+        Dropped Shows</h2>
+				<b-card-group v-show="show_dropped" deck>
 				<b-card no-body class='overflow-hidden m-3 bg-secondary p-2' style='min-width:250px;max-width:350px;text-align:center;' v-for="items,idx in json.dropped" v-if="items != undefined && items[2] != undefined">
           <b-row no-gutters v-if="items">
 						<b-col>
@@ -152,9 +173,15 @@
 
 			</b-card>
  <b-card class='m-2'>
-				<h2>Removed RSS Feeds</h2>
-				<b-button @click="json.removed_rss_feeds = []">Clear Old RSS Feeds</b-button>
-        <b-container>
+				<h2>
+
+          <font-awesome-icon class='pb-2 mr-2 hover_hand' icon='sort-down' v-show="show_dropped_rss" @click="show_dropped_rss=false" />
+            <font-awesome-icon v-show="!show_dropped_rss" @click="show_dropped_rss=true" class='pt-2 mb-1  mr-2 hover_hand' icon='caret-right' />
+
+
+        Removed RSS Feeds</h2>
+				<b-button @click="clear_removed_rss()">Clear Old RSS Feeds</b-button>
+        <b-container v-show="show_dropped_rss">
         <b-table class='mt-3' small striped :items="removed_rss_feeds()" />
         </b-container>
 			</b-card>
@@ -206,7 +233,7 @@ export default {
 		},
 	},
   	methods: {
-
+    
 		init: function(){
 
 		axios.get("http://" + window.location.hostname + ":" + this.$port + "/get").then(data=>{
@@ -217,6 +244,25 @@ export default {
       })
 		})
 		},
+      clear_completed: function(){
+        this.$bvModal.msgBoxConfirm('Are you sure you wish to remove the completed and dropped shows?  This action cannot be undone.')
+          .then(value => {
+            if(value){
+              this.json.completed_shows = []
+              this.json.dropped = []
+              this.save()
+            }
+          })
+      },
+      clear_removed_rss: function(){
+        this.$bvModal.msgBoxConfirm('Are you sure you wish to remove the old rss feeds?  This action cannot be undone.')
+          .then(value => {
+            if(value){
+              this.json.removed_rss_feeds= []
+              this.save()
+            }
+          })
+      },
       saveTextarea: function(nm, idx, sv){
         // Returns the value and bypasses the update until the blur is called
         this.save()
@@ -317,6 +363,11 @@ export default {
 	},
 	data() {
 		return {
+      show_rss: true,
+      show_shows: true,
+      show_completed: true,
+      show_dropped: true,
+      show_dropped_rss: false,
       showPrint: false,
       temp_add: "",
 			show_add: false,

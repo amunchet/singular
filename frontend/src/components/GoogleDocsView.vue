@@ -14,13 +14,13 @@
           <img height=100px :src="shows.thumbnail_url" />
           {{shows.name}}</td>
         <td style="text-align: center;width:10%;" :class="returnGradeColor(shows.grade)" >{{shows.grade}}</td>
-        <td><b>Preview</b><br />
+        <td><h4>Preview</h4>
           {{shows.preview}}
-          <br />
-          <b>First Episode</b><br />
+          <br /><br />
+          <h4>First Episode</h4>
           {{shows.first_episode}}
-          <br />
-          <b>Final Thoughts</b><br />
+          <br /><br />
+          <h4>Final Thoughts</h4>
           {{shows.final_thoughts}}
         </td>
       </tr>
@@ -198,7 +198,7 @@ table tbody tr{
   background-color: darkgreen;
 }
 .gradeC{
-  background-color: darkyellow;
+  background-color: yellow;
 }
 .gradeD{
   background-color: darkorange;

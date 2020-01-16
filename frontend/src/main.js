@@ -9,8 +9,11 @@ import VueSocketIO from 'vue-socket.io'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
 //Add the fontawesome icons here
-import { faUndo, faPlay, faEdit, faTimes, faCheck, faSortUp, faSortDown} from '@fortawesome/free-solid-svg-icons'
+import { faCaretRight, faPrint, faThLarge, faUndo, faPlay, faEdit, faTimes, faCheck, faSortUp, faSortDown} from '@fortawesome/free-solid-svg-icons'
 
+library.add(faThLarge)
+library.add(faCaretRight)
+library.add(faPrint)
 library.add(faEdit)
 library.add(faUndo)
 library.add(faPlay)
