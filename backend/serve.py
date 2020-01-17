@@ -33,6 +33,9 @@ if "SINGULAR_DOCKER_NAME" in os.environ:
 app = Flask(__name__,
         static_url_path="/"
         )
+
+FRONTEND_PATH = "/data/frontend/"
+
 app.config["SECRET_KEY"] = "asdfzxcva43afaazvxc"
 socketio = SocketIO(app)
 CORS(app)
@@ -40,25 +43,25 @@ CORS(app)
 # Static routes
 @app.route("/js/<path:path>")
 def send_js(path):  # pragma: no cover
-    return send_from_directory("./dist/js", path)
+    return send_from_directory(FRONTEND_PATH + "dist/js", path)
 
 
 @app.route("/css/<path:path>")
 def send_css(path):  # pragma: no cover
-    return send_from_directory("./dist/css", path)
+    return send_from_directory(FRONTEND_PATH + "dist/css", path)
 
 
 @app.route("/img/<path:path>")
 def send_img(path):  # pragma: no cover
-    return send_from_directory("./dist/img", path)
+    return send_from_directory(FRONTEND_PATH + "dist/img", path)
 
 @app.route("/")
 def send_home(): #pragma: no cover
-    return send_from_directory("./dist/", "index.html")
+    return send_from_directory(FRONTEND_PATH + "dist/", "index.html")
 
 @app.route("/dist/<path:path>")
 def send_dist(path):  # pragma: no cover
-    return send_from_directory("./dist", path)
+    return send_from_directory(FRONTEND_PATH + "dist", path)
 
 
 
