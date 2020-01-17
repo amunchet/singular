@@ -1,9 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
 # Starts up the production version of singular server
 
 # Step 1: Compile the vue to dist in src
+if [ -z "$1" ]; then
 docker-compose up -d singular_frontend
+else
+docker-compose up --build -d singular_frontend
+fi
+
 docker exec singular_singular_frontend_1 sh -c "cd /data && npm run build"
 docker cp singular_singular_frontend_1:/data/dist frontend
 docker stop singular_singular_frontend_1 && docker rm singular_singular_frontend_1
