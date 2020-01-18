@@ -1,7 +1,20 @@
-![Singular Logo](./docs/logo.png)
+<p align="center">
+  <img src='./docs/logo.png' />
+</p>
 
 ## Description
 Singular is a small docker project aimed to perform a nightly download from an RSS feed of torrents.  It has a frontend crafted in vue to curate the `settings.json` user file.  This project was built with blogging in mind, so options for extensive types of notes exist.  It also can create automatic thumbnails from the specified episodes and has formatting options for easy copy and paste to Google Docs (or another word processor).
+
+## Screenshots
+![Singular Screenshot GIF](./docs/screenshot.gif)
+
+## Key Features
+- Download of torrents from RSS source
+- Categorize and match by keyword
+- Easy media thumbnails (for use with Plex)
+- Automatic thumbnails of media
+- Automatic formatting of Reviewed shows for easy transfer to Google Docs
+
 
 ### General Use
 Singular is intended to have the data directory set as your Plex library and have the singular.bat script run nightly via Windows scheduling or Linux cronjob.  It assumes the use of docker and specifically docker-compose.  
@@ -12,18 +25,16 @@ Singular is NOT a media manager.  Singular works best in conjunction with a medi
 
 ## Getting Started
 1.  Make sure docker and docker compose are installed
-2.  ... 
+2.  Modify `docker-compose.yml` to fit needs
+3.  Run either `start_prod.sh`if on Linux.  For Windows or Mac, run the appropriate dockers from docker-compose (i.e. `docker-compose up --build -d singular_backend`).  If you are not using `start_prod.sh`, read the contents to build the vue project manually.
+4.  Navigate to port 7500 for the frontend interface
+5.  Setup Cron or some kind of timed event to run the `singular_cli`.  This will automatically download on a schedule
 
 ## Development
 - Start up docker with `docker-compose singular_frontend --build -d up`
 - Start up the vue development server with `cd frontend && npm run serve`
 	- You can also run this in the docker, then connect on 8080 
+- Fix the bug, add the feature, and issue a PR!
 
 
-## Future
-- Going to build out a Web UI for both recording information about shows watched and episode reviews.
-- Want to be able to add additional shows and remove/reorganize finished ones.
-
-
-
-### Support content creators, large and small.  Always use legal streams and torrents.
+# Support content creators, large and small.  Always use legal streams and torrents.
