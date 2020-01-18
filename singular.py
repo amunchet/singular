@@ -22,7 +22,8 @@ if "SINGULAR_PATH" in os.environ:
 
 if "win32" in sys.platform.lower():
     DELIM = "\\"  # Windows specific
-    cmd = """..{}..{}aria2{}aria2c.exe --seed-time=0 """.format(DELIM, DELIM, DELIM)
+    cmd = """..{}..{}aria2{}aria2c.exe --seed-time=0 """.format(
+        DELIM, DELIM, DELIM)
 
 else:
     DELIM = "/"  # Linux or Mac specific
@@ -93,7 +94,7 @@ def download_torrent(url, match_name, title):
     if title in os.listdir(DOWNLOAD + DELIM + match):
         log(title + " already found.  Ending")
         return 1
-    
+
     if len([path for path in os.listdir(DOWNLOAD + DELIM + match) if title in path]):
         log(title + " already found upon deeper inspection.  Ending")
         return 1
@@ -115,6 +116,7 @@ def download_torrent(url, match_name, title):
     log("Download complete")
     return 0
 
+
 def thumb(match):
     """
     Generates a thumbnail for the given file
@@ -129,10 +131,12 @@ def thumb(match):
 
         if ".torrent" not in item and ".jpg" not in item and item[-1] != "/":
             log('Starting command for ' + str(match))
-            os.system("cd " + path + " && mkdir '" + item.split(".")[0] + "' && cd '" + item.split(".")[0] + "' && ffmpeg -i '" + item + "' -vf fps=1/15 img%03d.jpg")
+            os.system("cd " + path + " && mkdir '" + item.split(".")[0] + "' && cd '" + item.split(
+                ".")[0] + "' && ffmpeg -i '" + item + "' -vf fps=1/15 img%03d.jpg")
             log("Finished creating thumb")
         else:
             log("Found either a torrent or an existing file in : " + item)
+
 
 def parseName(item):
     """
@@ -177,17 +181,18 @@ def main():
             do_thumb = 1
             if match:
                 try:
-                    do_thumb = download_torrent(item.links[0].href, match, item.title)
+                    do_thumb = download_torrent(
+                        item.links[0].href, match, item.title)
                 except Exception:
                     log("Download error: " + str(sys.exc_info()[1]))
                     do_thumb = 1
-            
-            temp = [x for x in config["shows"] if x[0] == match and len(x) > 2 and "thumbnail" in x[2] and str(x[2]["thumbnail"]) == "1"]
+
+            temp = [x for x in config["shows"] if x[0] == match and len(
+                x) > 2 and "thumbnail" in x[2] and str(x[2]["thumbnail"]) == "1"]
 
             if temp != []:
                 log("Generating thumbnail...")
                 thumb(match)
-
 
     artwork()
 
