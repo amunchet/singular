@@ -132,7 +132,7 @@ def thumb(match):
         if ".torrent" not in item and ".jpg" not in item and item[-1] != "/":
             log('Starting command for ' + str(match))
             os.system("cd " + path + " && mkdir '" + item.split(".")[0] + "' && cd '" + item.split(
-                ".")[0] + "' && ffmpeg -i '" + item + "' -vf fps=1/15 img%03d.jpg")
+                ".")[0] + "' && ffmpeg -i '" + item + "' -vf scale=720:405,fps=1/15 img%03d.jpg")
             log("Finished creating thumb")
         else:
             log("Found either a torrent or an existing file in : " + item)
