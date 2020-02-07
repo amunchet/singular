@@ -9,6 +9,7 @@ import time
 import shutil
 import docker
 import re
+import sys
 
 from flask import Flask, render_template, send_from_directory, stream_with_context, Response
 from flask import request
@@ -168,4 +169,7 @@ if __name__ == "__main__":
     #app.debug = True
     #app.config["ENV"] = "development"
     #app.run(host="0.0.0.0", port=7500)
-    socketio.run(app, host="0.0.0.0", port=7500)
+    if len(sys.argv) < 2:
+        socketio.run(app, host="0.0.0.0", port=7500)
+    else:
+        socketio.run(app, host="0.0.0.0", port=int(sys.argv[1]))
