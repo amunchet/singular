@@ -282,9 +282,9 @@
 
             init: function () {
 
-                axios.get("http://" + window.location.hostname + ":" + this.$port + "/get").then(data => {
+                axios.get("/get").then(data => {
                     this.json = data.data
-                    axios.get("http://" + window.location.hostname + ":" + this.$port + "/rss").then(
+                    axios.get("/rss").then(
                     res => {
                         this.rss = res.data
 
@@ -337,7 +337,7 @@
             },
             save: async function () {
                 if (this.json.success == undefined) {
-                    axios.post("http://" + window.location.hostname + ":" + this.$port + "/save", this.json).then(
+                    axios.post("//" + window.location.hostname + ":" + this.$port + "/save", this.json).then(
                         resp => {
                             //this.init()
                             console.log("Saved!")
@@ -353,7 +353,7 @@
                 this.save()
             },
             get_docker_status: function () {
-                axios.get("http://" + window.location.hostname + ":" + this.$port + "/docker/status").then(resp => {
+                axios.get("/docker/status").then(resp => {
                     this.docker_output = resp.data.replace("\n", "<br />")
                 }).catch(resp => {
                     this.docker_output = "ERROR : <div style='color: red'>" + resp.response.data + "</div>"
