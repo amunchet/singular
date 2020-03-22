@@ -27,7 +27,7 @@ Singular is NOT a media manager.  Singular works best in conjunction with a medi
 0.  PLEASE NOTE: Currently the docker-compose is setup for use with traefik.  If you wish to use singular standalone, simply uncomment the lines in docker-compose for the port to expose the port directly.
 1.  Make sure docker and docker compose are installed
 2.  Modify `docker-compose.yml` to fit needs
-3.  Run either `start_prod.sh`if on Linux.  For Windows or Mac, run the appropriate dockers from docker-compose (i.e. `docker-compose up --build -d singular_backend`).  If you are not using `start_prod.sh`, read the contents to build the vue project manually.
+3.  Run either `start_prod.sh` if on Linux.  For Windows or Mac, run the appropriate dockers from docker-compose (i.e. `docker-compose up --build -d singular_backend`).  If you are not using `start_prod.sh`, read the contents to build the vue project manually.
 4.  Navigate to port 7500 for the frontend interface
 5.  Setup Cron or some kind of timed event to run the `singular_cli`.  This will automatically download on a schedule
 
