@@ -35,7 +35,7 @@ library.add(faSortUp)
 library.add(faSortDown)
 
 // Define the backend port
-Vue.prototype.$port = 7500
+Vue.prototype.$port = 443
 
 
 
