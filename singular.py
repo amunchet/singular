@@ -166,6 +166,9 @@ def artwork():
                     item[1], DOWNLOAD + DELIM + filename + DELIM + "show.jpg"
                 )
 
+                urllib.request.urlretrieve(
+                    item[1], DOWNLOAD + DELIM + filename + DELIM + "poster.jpg"
+                )
 
 def main():
     """
