@@ -49,6 +49,31 @@
                 <b-card class="m-2">
 
                     <h2>Direct Shows</h2>
+                    <b-button variant="success" @click="()=>{
+                    if(json.direct == undefined){
+                    json.direct = []
+                    }
+                    json.direct.push('')
+                    $forceUpdate()
+                    }
+                    ">+Add Direct Download</b-button>
+
+                    <b-row v-if="json.direct != undefined" v-for="(url, idx) in json.direct" v-bind:key="idx" class="m-2">
+                      <b-col cols="1">
+                        <b-button variant="danger" @click="()=>{
+                        json.direct.splice(idx, 1)
+                        save()
+                        $forceUpdate()
+                        }"
+                        >
+                        <font-awesome-icon icon="times" size="1x" />
+                      </b-button>
+                      </b-col>
+                      <b-col>
+                      <b-input v-model="json.direct[idx]" @blur="save()"/>
+                      </b-col>
+                    </b-row>
+
                 </b-card>
 
                 <b-card class='m-2'>
