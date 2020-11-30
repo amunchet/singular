@@ -80,7 +80,20 @@ def is_match(title, matches):
 
     return False
 
+def direct_download_torrent(url):
+    """Downloads a torrent directly"""
+    if not os.path.exists(DOWNLOAD + DELIM + "direct"):
+        os.mkdir(DOWNLOAD + DELIM + "direct")
 
+    full_cmd = "cd " + DOWNLOAD + DELIM + " && "
+    full_cmd += cmd + '"' + url + '"' + " > /download_output"
+    log("Direct download full command: " + full_cmd)
+    os.system(full_cmd)
+    with open("/download_output") as f:
+        log(f.read())
+    log("Direct Download Complete")
+    return 0
+    
 def download_torrent(url, match_name, title):
     """
     Downloads the given torrent
