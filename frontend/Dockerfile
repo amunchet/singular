@@ -7,6 +7,7 @@ RUN mkdir /data/src
 
 COPY . /data/
 
+RUN npm install -g npm@latest
 RUN cd /data && npm install 
 
 EXPOSE 8080
