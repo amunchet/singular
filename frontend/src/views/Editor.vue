@@ -46,6 +46,11 @@
                     </b-container>
 
                 </b-card>
+                <b-card class="m-2">
+
+                    <h2>Direct Shows</h2>
+                </b-card>
+
                 <b-card class='m-2'>
                     <b-modal id="modal-add" title="Add/Edit Show" @ok="handleAddOk()">
                         <AddShow v-on:updateNew="handleAddUpdate" />
