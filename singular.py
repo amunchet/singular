@@ -85,7 +85,7 @@ def direct_download_torrent(url):
     if not os.path.exists(DOWNLOAD + DELIM + "direct"):
         os.mkdir(DOWNLOAD + DELIM + "direct")
 
-    full_cmd = "cd " + DOWNLOAD + DELIM + " && "
+    full_cmd = "cd " + DOWNLOAD + DELIM + "direct && "
     full_cmd += cmd + '"' + url + '"' + " > /download_output"
     log("Direct download full command: " + full_cmd)
     os.system(full_cmd)
@@ -191,6 +191,12 @@ def main():
     with open(LOG, "w") as f:
         f.write("[Starting]\r\n")
 
+    # Direct downloads
+    for url in config["direct"]:
+        log("Direct download for " + str(url)) 
+        direct_download_torrent(url)
+
+    # Feed Downloads
     for feed in read_rss(config["rss_feed"]):
         for item in feed:
             match = is_match(item.title, [x[0] for x in config["shows"]])
