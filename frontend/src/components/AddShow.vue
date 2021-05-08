@@ -17,6 +17,20 @@
         <b-row class='m-1 p-1'>
             <b-form-checkbox v-model="newshow[2].thumbnail" value="1" unchecked-value="0" /> Generate Thumbnails?
         </b-row>
+        <b-row class="m-1 p-1">
+          <b-button class="ml-auto mb-2" @click="()=>{
+            if (newshow[2].replacements == undefined){
+              newshow[2].replacements = []
+            }
+            newshow[2].replacements.push({'': ''})
+            $forceUpdate()
+          }">+ Add Ignored Item</b-button>
+          <b-row class="mb-2" v-for="replacement, idx in newshow[2].replacements" v-bind:key="idx">
+            <b-col>Replace: <b-input v-model="replacement[0]"/></b-col>
+            <b-col>With: <b-input v-model="replacement[1]"/></b-col>
+            
+          </b-row>
+        </b-row>
         <b-row class='m-1 p-1'>
             <b-form-textarea aria-describedby="preview_help" v-model="newshow[2].preview"
                 placeholder='Preview Thoughts' />
