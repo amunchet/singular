@@ -94,7 +94,7 @@ def direct_download_torrent(url):
     log("Direct Download Complete")
     return 0
     
-def download_torrent(url, match_name, title):
+def download_torrent(url, match_name, title, replacements=[]):
     """
     Downloads the given torrent
     """
@@ -122,9 +122,23 @@ def download_torrent(url, match_name, title):
     # Fix for if they use weird naming conventions
     # Copying the files over
 
-    for item in glob.glob(DOWNLOAD + DELIM + match + DELIM + "*Episode*"):
+    for item in glob.glob(DOWNLOAD + DELIM + match + DELIM + "*"):
         if ".torrent" not in item:
-            shutil.copy(item, item.replace("Episode ", "0"))
+            real_name = item.replace("Episode ", "0")
+            
+            for replacement in replacements:
+                log("Replacement: " + str(replacement))
+                real_name = real_name.replace(replacement[0], replacement[1])
+            
+            if item != real_name:
+                log("Copying " + item + " to " + real_name)
+                try:
+                    shutil.copy(item, real_name)
+                except Exception:
+                    log("Failed during rename")
+
+
+            
 
     log("Download complete")
     return 0
@@ -203,8 +217,9 @@ def main():
             do_thumb = 1
             if match:
                 try:
+                    replacements = [x[2]['replacements'] for x in config["shows"] if x[0] == match and len(x) > 2 and "replacements" in x[2]]
                     do_thumb = download_torrent(
-                        item.links[0].href, match, item.title)
+                        item.links[0].href, match, item.title, replacements=replacements)
                 except Exception:
                     log("Download error: " + str(sys.exc_info()[1]))
                     do_thumb = 1
