@@ -114,7 +114,17 @@ def save_settings():
         f.seek(0)
         json.dump(data, f)
         f.truncate()
-    return "Saved."
+    
+    # Remove any folders who aren't listed 
+    folders = [x.replace("_", " ") for x in os.listdir("/download")]
+    shows = [x[0] for x in data["shows"]]
+
+    difference = [x.replace(" ", "_") for x in folders if x not in shows]
+    for x in difference:
+        shutil.rmtree(os.path.join("/download", x))
+
+
+    return f"Saved: {difference}"
 
 # Docker section
 
