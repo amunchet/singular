@@ -6,7 +6,7 @@ COUNT=`docker ps | grep singular | wc | awk ' { print $1 } '`
 
 if [ "$COUNT" -eq "1" ]; then
 	echo "Only Singular backend running.  Going ahead..."
-	/usr/local/bin/docker-compose up singular_cli
+	/usr/bin/docker-compose up singular_cli
 fi
 
 if [ "$COUNT" -eq "2" ]; then
