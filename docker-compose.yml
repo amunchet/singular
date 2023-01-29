@@ -34,12 +34,13 @@ services:
       - SINGULAR_DOCKER_NAME=singular_singular_cli
 
     # Uncomment the following 2 lines if running directly - currently setup for traefik
-    #ports:
-    #  - "7500:7500"
+    # ports:
+    #  - "192.168.76.250:443:7500"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock 
       - /usr/bin/docker:/usr/bin/docker 
       - ./:/data
+      - ./data:/download
     entrypoint:
       - python3
       - /data/backend/serve.py
